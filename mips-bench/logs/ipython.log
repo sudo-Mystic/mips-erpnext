@@ -1,18 +1,811 @@
-2026-06-23 11:37:01,669 INFO ipython === bench console session ===
-2026-06-23 11:37:01,670 INFO ipython === session end ===
-2026-06-24 10:04:58,597 INFO ipython === bench console session ===
-2026-06-24 10:04:58,599 INFO ipython exec(open('/workspaces/mips-erpnext/setup_mips_tripura.py').read())
-2026-06-24 10:04:58,599 INFO ipython run_all(dry_run=True) 
-2026-06-24 10:04:58,599 INFO ipython exec(open('/workspaces/mips-erpnext/setup_mips_tripura.py').read())0it(
-2026-06-24 10:04:58,599 INFO ipython === session end ===
-2026-06-24 10:10:43,982 INFO ipython === bench console session ===
-2026-06-24 10:10:43,983 INFO ipython exec(open('/workspaces/mips-erpnext/setup_mips_tripura.py').read(), globals())
-run_all(dry_run=True)
-2026-06-24 10:10:43,983 INFO ipython run_all(dry_run=False)
-2026-06-24 10:10:43,983 INFO ipython frappe.db.commit()  
-2026-06-24 10:10:43,983 INFO ipython === session end ===
-2026-06-24 10:26:52,589 INFO ipython === bench console session ===
-2026-06-24 10:26:52,589 INFO ipython exec(open('/workspaces/mips-erpnext/setup_mips_tripura.py').read(), globals())
-run_all(dry_run=True)
-2026-06-24 10:26:52,589 INFO ipython run_all(dry_run=False)
-2026-06-24 10:26:52,589 INFO ipython === session end ===
+2026-06-27 06:56:34,324 INFO ipython """
+MIPS Tripura — ERPNext (Frappe v15) Setup Script
+==================================================
+
+WHAT THIS IS
+------------
+A paste-into-`bench console` script that:
+  1. Restricts/disables the role-groups tied to modules you don't need
+     (Manufacturing, Stock, Quality, Projects, Buying, Support/Helpdesk).
+  2. Creates college-specific Roles + Role Profiles (Registrar, Instructor,
+     Accounts, Admissions/CRM, HR & Payroll, Student Portal).
+  3. Creates demo academic data: Academic Years/Terms, Departments, Programs
+     (B.Pharm / D.Pharm), starter Courses, a few Instructors & Students,
+     a Fee Category/Structure, a Student Group, a Draft Fee Schedule, and a
+     handful of CRM Leads for the admissions pipeline.
+
+WHAT THIS DELIBERATELY DOES NOT TOUCH
+--------------------------------------
+- Your whitelabel app's branding (logo, app name, colors). You said a
+  whitelabel module is already installed and I don't know its exact
+  fields — overwriting System Settings / Website Settings blind could
+  fight with it. Tell me the doctype/fields it uses and I'll add a step.
+- Hiding Workspaces from the sidebar. There's no safe documented API for
+  this — it's a one-time UI action. See HIDE_WORKSPACES.md for the exact
+  3-click path. Scripting Role.disabled below achieves the *functional*
+  equivalent (no one can actually use Stock/Manufacturing/etc.) even
+  before you tidy up the sidebar.
+- Actually generating real fee invoices. run_all() creates the Fee Schedule
+  as a Draft and stops there on purpose — submitting it touches your real
+  Chart of Accounts and hits a known fragile spot in this app/version. See
+  generate_fee_invoices()'s docstring if you want to go further.
+
+HOW TO RUN THIS
+----------------
+1. BACK UP FIRST:  bench --site YOUR_SITE backup --with-files
+2. Copy this file to your server, e.g. /home/frappe/mips_setup.py
+3. bench --site YOUR_SITE console
+4. Inside the console:
+       exec(open('/home/frappe/mips_setup.py').read())
+       run_all(dry_run=True)     # <-- review the printed plan first
+       run_all(dry_run=False)    # <-- then actually apply it
+5. frappe.db.commit() is called automatically at the end of a real run.
+
+Re-running is safe: every step checks "does this already exist?" before
+creating anything, so you can run it more than once without duplicating
+records.
+"""
+
+import frappe
+from frappe.utils import getdate
+
+# ---------------------------------------------------------------------------
+# CONFIG — edit these before running if you want different values
+# ---------------------------------------------------------------------------
+
+COMPANY = frappe.defaults.get_global_default("company")  # uses whatever you already set up in Setup Wizard
+
+ACADEMIC_YEARS = [
+    {"academic_year_name": "2025-26", "year_start_date": "2025-08-01", "year_end_date": "2026-05-31"},
+    {"academic_year_name": "2026-27", "year_start_date": "2026-08-01", "year_end_date": "2027-05-31"},
+]
+
+DEPARTMENTS = [
+    "Pharmaceutics",
+    "Pharmaceutical Chemistry",
+    "Pharmacology",
+    "Pharmacognosy",
+    "Pharmacy Practice",
+    "Humanities and Basic Sciences",
+]
+
+PROGRAMS = [
+    {"program_name": "B.Pharm", "program_abbreviation": "BPHARM"},
+    {"program_name": "D.Pharm", "program_abbreviation": "DPHARM"},
+]
+
+# Starter subject lists — typical PCI-regulated B.Pharm/D.Pharm year-1 syllabus.
+# Treat as a seed set, not the verified official syllabus — check against the
+# current PCI / Tripura University curriculum before publishing to students.
+COURSES = {
+    "B.Pharm": [
+        "Human Anatomy and Physiology",
+        "Pharmaceutical Analysis",
+        "Pharmaceutics",
+        "Pharmaceutical Inorganic Chemistry",
+        "Communication Skills",
+        "Remedial Biology",
+    ],
+    "D.Pharm": [
+        "Pharmaceutics I",
+        "Pharmaceutical Chemistry I",
+        "Pharmacognosy I",
+        "Biochemistry and Clinical Pathology",
+        "Human Anatomy and Physiology",
+        "Health Education and Community Pharmacy",
+    ],
+}
+
+FEE_CATEGORIES = ["Tuition Fee", "Admission Fee", "Library Fee", "Hostel Fee", "Examination Fee"]
+
+# Optional but commonly expected by Fee Structure/Fee Schedule — created
+# best-effort. If your site doesn't actually require these, they're just
+# unused and harmless.
+ACADEMIC_TERMS = [
+    {"term_name": "Semester 1", "academic_year": "2025-26",
+     "term_start_date": "2025-08-01", "term_end_date": "2025-12-31"},
+]
+
+STUDENT_GROUP_NAME = "B.Pharm Demo Group 2025-26"
+FEE_SCHEDULE_DUE_DATE = "2025-09-15"
+
+# DEMO records only — fictional placeholders, not real people. Delete or
+# replace before you onboard real staff/students.
+DEMO_INSTRUCTORS = [
+    {"instructor_name": "Anindita Bhattacharjee", "department": "Pharmaceutics", "gender": "Female"},
+    {"instructor_name": "Subrata Debbarma", "department": "Pharmacology", "gender": "Male"},
+    {"instructor_name": "Pradip Saha", "department": "Pharmaceutical Chemistry", "gender": "Male"},
+]
+
+DEMO_STUDENTS = [
+    {"first_name": "Riya", "last_name": "Nath", "gender": "Female", "program": "B.Pharm", "joining_date": "2025-08-10"},
+    {"first_name": "Suman", "last_name": "Tripura", "gender": "Male", "program": "B.Pharm", "joining_date": "2025-08-10"},
+    {"first_name": "Mousumi", "last_name": "Reang", "gender": "Female", "program": "D.Pharm", "joining_date": "2025-08-10"},
+    {"first_name": "Arindam", "last_name": "Paul", "gender": "Male", "program": "D.Pharm", "joining_date": "2025-08-10"},
+]
+
+DEMO_LEADS = [
+    {"lead_name": "Priya Sarkar", "source": "Website", "status": "Open", "mobile_no": "9000000001",
+     "note": "Enquired about B.Pharm admission 2026-27."},
+    {"lead_name": "Bikram Choudhury", "source": "Walk In", "status": "Replied", "mobile_no": "9000000002",
+     "note": "Visited campus, asked about D.Pharm fee structure."},
+    {"lead_name": "Anjali Debnath", "source": "Reference", "status": "Open", "mobile_no": "9000000003",
+     "note": "Referred by an existing student, interested in B.Pharm."},
+    {"lead_name": "Joydeep Roy", "source": "Advertisement", "status": "Replied", "mobile_no": "9000000004",
+     "note": "Saw the newspaper ad, wants hostel + fee details."},
+]
+
+# Roles to switch OFF (modules you said you don't need right now).
+# Each entry is a list of *candidate* role names — whichever exist on your
+# site get disabled, the rest are silently skipped (no error).
+ROLES_TO_DISABLE = {
+    "Manufacturing": ["Manufacturing User", "Manufacturing Manager"],
+    "Stock / Inventory": ["Stock User", "Stock Manager", "Item Manager"],
+    "Quality Management": ["Quality Manager"],
+    "Projects": ["Projects User", "Projects Manager"],
+    "Buying": ["Purchase User", "Purchase Manager"],
+    "Support / Helpdesk": ["Support Team", "Agent", "Agent Manager"],
+    "Assets": ["Asset Manager", "Asset User"],
+}
+
+# Roles you're keeping active (Education, CRM, Accounts, HR & Payroll).
+# Used only to build Role Profiles below — not modified themselves.
+CORE_ROLES_TO_KEEP = [
+    "Instructor", "Student", "Sales User", "Sales Manager",
+    "Accounts User", "Accounts Manager", "HR User", "HR Manager",
+    "Payroll Manager", "Employee",
+]
+
+# Custom roles this script will create if missing, then bundle into profiles.
+CUSTOM_ROLES = ["Academic Admin", "Admissions Officer"]
+
+ROLE_PROFILES = {
+    "MIPS - Registrar / Academic Admin": ["Academic Admin", "Instructor", "Employee"],
+    "MIPS - Instructor": ["Instructor", "Employee"],
+    "MIPS - Accounts": ["Accounts User", "Employee"],
+    "MIPS - Admissions (CRM)": ["Admissions Officer", "Sales User", "Employee"],
+    "MIPS - HR & Payroll": ["HR User", "Employee"],
+    "MIPS - Student Portal": ["Student"],
+}
+
+LOG = []
+
+
+def log(msg):
+    print(msg)
+    LOG.append(msg)
+
+
+# ---------------------------------------------------------------------------
+# STEP 1 — disable the roles tied to modules you don't need
+# ---------------------------------------------------------------------------
+
+def disable_unneeded_modules(dry_run=True):
+    log("\n=== STEP 1: Disabling roles for unneeded modules ===")
+    for module_label, candidate_roles in ROLES_TO_DISABLE.items():
+        for role_name in candidate_roles:
+            if not frappe.db.exists("Role", role_name):
+                continue  # role doesn't exist on this site, nothing to do
+            already_disabled = frappe.db.get_value("Role", role_name, "disabled")
+            if already_disabled:
+                log(f"  SKIP (already disabled): {role_name} [{module_label}]")
+                continue
+            if dry_run:
+                log(f"  [DRY RUN] would disable role: {role_name} [{module_label}]")
+                continue
+            try:
+                frappe.db.set_value("Role", role_name, "disabled", 1)
+                # also strip it from anyone who currently has it, except Administrator
+                users_with_role = frappe.get_all(
+                    "Has Role", filters={"role": role_name, "parenttype": "User"},
+                    fields=["parent", "name"]
+                )
+                removed = 0
+                for row in users_with_role:
+                    if row.parent == "Administrator":
+                        continue
+                    frappe.delete_doc("Has Role", row.name, ignore_permissions=True)
+                    removed += 1
+                log(f"  DISABLED: {role_name} [{module_label}] (removed from {removed} user(s))")
+            except Exception as e:
+                log(f"  !! FAILED to disable '{role_name}' [{module_label}]: {e}")
+
+
+# ---------------------------------------------------------------------------
+# STEP 2 — custom roles + role profiles for the roles you ARE keeping
+# ---------------------------------------------------------------------------
+
+def create_custom_roles(dry_run=True):
+    log("\n=== STEP 2a: Creating custom roles ===")
+    for role_name in CUSTOM_ROLES:
+        if frappe.db.exists("Role", role_name):
+            log(f"  SKIP (exists): Role '{role_name}'")
+            continue
+        if dry_run:
+            log(f"  [DRY RUN] would create Role '{role_name}'")
+            continue
+        try:
+            doc = frappe.new_doc("Role")
+            doc.role_name = role_name
+            doc.desk_access = 1
+            doc.insert(ignore_permissions=True)
+            log(f"  CREATED: Role '{role_name}'")
+        except Exception as e:
+            log(f"  !! FAILED to create Role '{role_name}': {e}")
+
+
+def create_role_profiles(dry_run=True):
+    log("\n=== STEP 2b: Creating role profiles ===")
+    for profile_name, role_list in ROLE_PROFILES.items():
+        if frappe.db.exists("Role Profile", profile_name):
+            log(f"  SKIP (exists): Role Profile '{profile_name}'")
+            continue
+        existing_roles = [r for r in role_list if frappe.db.exists("Role", r)]
+        missing_roles = [r for r in role_list if r not in existing_roles]
+        if missing_roles:
+            log(f"  NOTE: '{profile_name}' wanted {missing_roles} but those roles "
+                f"don't exist on this site yet — profile will be created without them.")
+        if dry_run:
+            log(f"  [DRY RUN] would create Role Profile '{profile_name}' with roles {existing_roles}")
+            continue
+        try:
+            doc = frappe.new_doc("Role Profile")
+            doc.role_profile = profile_name
+            for r in existing_roles:
+                doc.append("roles", {"role": r})
+            doc.insert(ignore_permissions=True)
+            log(f"  CREATED: Role Profile '{profile_name}' -> {existing_roles}")
+        except Exception as e:
+            log(f"  !! FAILED to create Role Profile '{profile_name}': {e}")
+
+
+# ---------------------------------------------------------------------------
+# STEP 3 — academic master data
+# ---------------------------------------------------------------------------
+
+def create_academic_years(dry_run=True):
+    log("\n=== STEP 3a: Academic Years ===")
+    for ay in ACADEMIC_YEARS:
+        name = ay["academic_year_name"]
+        if frappe.db.exists("Academic Year", name):
+            log(f"  SKIP (exists): Academic Year '{name}'")
+            continue
+        if dry_run:
+            log(f"  [DRY RUN] would create Academic Year '{name}'")
+            continue
+        try:
+            doc = frappe.new_doc("Academic Year")
+            doc.academic_year_name = name
+            doc.year_start_date = getdate(ay["year_start_date"])
+            doc.year_end_date = getdate(ay["year_end_date"])
+            doc.insert(ignore_permissions=True)
+            log(f"  CREATED: Academic Year '{name}'")
+        except Exception as e:
+            log(f"  !! FAILED to create Academic Year '{name}': {e}")
+
+
+def create_academic_terms(dry_run=True):
+    log("\n=== STEP 3a-2: Academic Terms (best-effort — used by Fee Structure/Schedule if mandatory) ===")
+    for term in ACADEMIC_TERMS:
+        name = term["term_name"]
+        if frappe.db.exists("Academic Term", {"term_name": name, "academic_year": term["academic_year"]}):
+            log(f"  SKIP (exists): Academic Term '{name}' ({term['academic_year']})")
+            continue
+        if dry_run:
+            log(f"  [DRY RUN] would create Academic Term '{name}' ({term['academic_year']})")
+            continue
+        try:
+            doc = frappe.new_doc("Academic Term")
+            doc.term_name = name
+            doc.academic_year = term["academic_year"]
+            doc.term_start_date = getdate(term["term_start_date"])
+            doc.term_end_date = getdate(term["term_end_date"])
+            doc.insert(ignore_permissions=True)
+            log(f"  CREATED: Academic Term '{name}' ({term['academic_year']})")
+        except Exception as e:
+            log(f"  !! Academic Term creation skipped: {e} (fine — it's only used if your site requires it)")
+
+
+def create_departments(dry_run=True):
+    log("\n=== STEP 3b: Departments ===")
+    for dept in DEPARTMENTS:
+        # Frappe auto-suffixes Department names with " - <abbr>" when a company
+        # is set, so check loosely by department_name instead of exact name.
+        existing = frappe.db.exists("Department", {"department_name": dept})
+        if existing:
+            log(f"  SKIP (exists): Department '{dept}'")
+            continue
+        if dry_run:
+            log(f"  [DRY RUN] would create Department '{dept}'")
+            continue
+        try:
+            doc = frappe.new_doc("Department")
+            doc.department_name = dept
+            if COMPANY:
+                doc.company = COMPANY
+            doc.insert(ignore_permissions=True)
+            log(f"  CREATED: Department '{dept}'")
+        except Exception as e:
+            log(f"  !! FAILED to create Department '{dept}': {e}")
+
+
+def create_programs(dry_run=True):
+    log("\n=== STEP 3c: Programs ===")
+    for prog in PROGRAMS:
+        name = prog["program_name"]
+        if frappe.db.exists("Program", name):
+            log(f"  SKIP (exists): Program '{name}'")
+            continue
+        if dry_run:
+            log(f"  [DRY RUN] would create Program '{name}'")
+            continue
+        try:
+            doc = frappe.new_doc("Program")
+            doc.program_name = name
+            if "program_abbreviation" in [f.fieldname for f in doc.meta.fields]:
+                doc.program_abbreviation = prog["program_abbreviation"]
+            doc.insert(ignore_permissions=True)
+            log(f"  CREATED: Program '{name}'")
+        except Exception as e:
+            log(f"  !! FAILED to create Program '{name}': {e}")
+
+
+def create_courses(dry_run=True):
+    log("\n=== STEP 3d: Courses ===")
+    for program_name, course_list in COURSES.items():
+        for course_name in course_list:
+            if frappe.db.exists("Course", {"course_name": course_name}):
+                log(f"  SKIP (exists): Course '{course_name}'")
+                continue
+            if dry_run:
+                log(f"  [DRY RUN] would create Course '{course_name}' (for {program_name})")
+                continue
+            try:
+                doc = frappe.new_doc("Course")
+                doc.course_name = course_name
+                doc.insert(ignore_permissions=True)
+                log(f"  CREATED: Course '{course_name}'")
+            except Exception as e:
+                log(f"  !! FAILED to create Course '{course_name}': {e}")
+
+
+def _department_full_name(label):
+    """Department names often get an auto-suffix like ' - MIPS' once a
+    company is set — resolve the real primary key from the readable label."""
+    return frappe.db.get_value("Department", {"department_name": label}, "name")
+
+
+def _student_name(first_name, last_name):
+    return frappe.db.get_value("Student", {"first_name": first_name, "last_name": last_name}, "name")
+
+
+def _find_field_by_label(doctype, label_substring):
+    """Find a fieldname by matching part of its label, instead of hardcoding
+    a fieldname we're not 100% sure of. Returns None if nothing matches —
+    callers must handle that gracefully, never assume a hit."""
+    try:
+        for f in frappe.get_meta(doctype).fields:
+            if f.label and label_substring.lower() in f.label.lower():
+                return f.fieldname
+    except Exception:
+        pass
+    return None
+
+
+# ---------------------------------------------------------------------------
+# STEP 4 — demo instructors & students (FICTIONAL — replace before go-live)
+# ---------------------------------------------------------------------------
+
+def create_demo_instructors(dry_run=True):
+    log("\n=== STEP 4a: Demo instructors (fictional placeholders) ===")
+    for inst in DEMO_INSTRUCTORS:
+        if frappe.db.exists("Instructor", {"instructor_name": inst["instructor_name"]}):
+            log(f"  SKIP (exists): Instructor '{inst['instructor_name']}'")
+            continue
+        if dry_run:
+            log(f"  [DRY RUN] would create Instructor '{inst['instructor_name']}'")
+            continue
+        try:
+            doc = frappe.new_doc("Instructor")
+            doc.instructor_name = inst["instructor_name"]
+            dept_name = _department_full_name(inst["department"])
+            if dept_name:
+                doc.department = dept_name
+            if "gender" in [f.fieldname for f in doc.meta.fields]:
+                doc.gender = inst["gender"]
+            doc.insert(ignore_permissions=True)
+            log(f"  CREATED: Instructor '{inst['instructor_name']}'")
+        except Exception as e:
+            log(f"  !! FAILED to create Instructor '{inst['instructor_name']}': {e}")
+
+
+def create_demo_students(dry_run=True):
+    log("\n=== STEP 4b: Demo students (fictional placeholders) ===")
+
+    # The Education app auto-creates a linked portal User from
+    # student_email_id on Student.validate(), unless this flag is set.
+    # We give every demo student a placeholder email below, but as a second
+    # safety net we also temporarily skip that auto-User-creation step here
+    # so a missing/duplicate email can never again take down the whole run —
+    # and we restore whatever this was set to before we touched it.
+    original_skip = None
+    if not dry_run:
+        original_skip = frappe.db.get_single_value("Education Settings", "user_creation_skip")
+        if not original_skip:
+            frappe.db.set_single_value("Education Settings", "user_creation_skip", 1)
+
+    try:
+        for stu in DEMO_STUDENTS:
+            full_name = f"{stu['first_name']} {stu['last_name']}"
+            if frappe.db.exists("Student", {"first_name": stu["first_name"], "last_name": stu["last_name"]}):
+                log(f"  SKIP (exists): Student '{full_name}'")
+                continue
+            placeholder_email = f"{stu['first_name'].lower()}.{stu['last_name'].lower()}.demo@mipstripura.in"
+            if dry_run:
+                log(f"  [DRY RUN] would create Student '{full_name}' ({stu['program']}, {placeholder_email})")
+                continue
+
+            try:
+                doc = frappe.new_doc("Student")
+                doc.first_name = stu["first_name"]
+                doc.last_name = stu["last_name"]
+                doc.gender = stu["gender"]
+                doc.joining_date = getdate(stu["joining_date"])
+                doc.student_email_id = placeholder_email
+                doc.insert(ignore_permissions=True)
+                log(f"  CREATED: Student '{full_name}'")
+            except Exception as e:
+                log(f"  !! FAILED to create Student '{full_name}': {e}")
+                continue  # don't attempt enrollment for a student that wasn't created
+
+            # Best-effort Program Enrollment — skipped quietly if the academic
+            # setup on this site uses different mandatory fields.
+            try:
+                ay = ACADEMIC_YEARS[0]["academic_year_name"]
+                if not frappe.db.exists("Program Enrollment", {"student": doc.name, "program": stu["program"]}):
+                    pe = frappe.new_doc("Program Enrollment")
+                    pe.student = doc.name
+                    pe.student_name = full_name
+                    pe.program = stu["program"]
+                    pe.academic_year = ay
+                    pe.enrollment_date = getdate(stu["joining_date"])
+                    pe.insert(ignore_permissions=True)
+                    log(f"    + enrolled in {stu['program']} ({ay})")
+            except Exception as e:
+                log(f"    !! Program Enrollment skipped for '{full_name}': {e}")
+    finally:
+        if not dry_run and original_skip is not None and not original_skip:
+            frappe.db.set_single_value("Education Settings", "user_creation_skip", original_skip)
+
+
+
+
+# ---------------------------------------------------------------------------
+# STEP 5 — fee categories + a starter fee structure
+# ---------------------------------------------------------------------------
+
+def create_fee_categories(dry_run=True):
+    log("\n=== STEP 5a: Fee Categories ===")
+    for cat in FEE_CATEGORIES:
+        if frappe.db.exists("Fee Category", cat):
+            log(f"  SKIP (exists): Fee Category '{cat}'")
+            continue
+        if dry_run:
+            log(f"  [DRY RUN] would create Fee Category '{cat}'")
+            continue
+        try:
+            doc = frappe.new_doc("Fee Category")
+            doc.category_name = cat
+            doc.insert(ignore_permissions=True)
+            log(f"  CREATED: Fee Category '{cat}'")
+        except Exception as e:
+            log(f"  !! FAILED to create Fee Category '{cat}': {e}")
+
+
+def create_fee_structure(dry_run=True):
+    log("\n=== STEP 5b: Starter Fee Structure (B.Pharm, Year 1) ===")
+    structure_name_filter = {"program": "B.Pharm"}
+    if frappe.db.exists("Fee Structure", structure_name_filter):
+        log("  SKIP (exists): Fee Structure for B.Pharm")
+        return
+    if dry_run:
+        log("  [DRY RUN] would create + submit a Fee Structure for B.Pharm with starter amounts "
+            "(Tuition 60000, Admission 5000, Library 1000, Hostel 25000, Examination 2000 — edit these). "
+            "Submission is required before it can be used in a Fee Schedule.")
+        return
+    try:
+        doc = frappe.new_doc("Fee Structure")
+        doc.program = "B.Pharm"
+        doc.academic_year = ACADEMIC_YEARS[0]["academic_year_name"]
+        term_name = ACADEMIC_TERMS[0]["term_name"] if ACADEMIC_TERMS else None
+        if term_name and "academic_term" in [f.fieldname for f in doc.meta.fields] \
+                and frappe.db.exists("Academic Term", {"term_name": term_name}):
+            doc.academic_term = term_name
+        starter_amounts = {
+            "Tuition Fee": 60000, "Admission Fee": 5000, "Library Fee": 1000,
+            "Hostel Fee": 25000, "Examination Fee": 2000,
+        }
+        for cat, amount in starter_amounts.items():
+            doc.append("components", {"fees_category": cat, "amount": amount})
+        doc.insert(ignore_permissions=True)
+        log("  CREATED: Fee Structure for B.Pharm (placeholder amounts — edit in UI)")
+        try:
+            doc.submit()
+            log("    + submitted (a Fee Schedule can now reference this structure)")
+        except Exception as e:
+            log(f"    !! Could not submit Fee Structure automatically: {e}")
+            log("       Open it in the UI and submit manually before creating a Fee Schedule from it.")
+    except Exception as e:
+        log(f"  !! Fee Structure creation failed (field names may differ on this site): {e}")
+
+
+def create_demo_student_group(dry_run=True):
+    log("\n=== STEP 5c: Demo Student Group (needed for Fee Schedule) ===")
+    if frappe.db.exists("Student Group", {"student_group_name": STUDENT_GROUP_NAME}):
+        log(f"  SKIP (exists): Student Group '{STUDENT_GROUP_NAME}'")
+        return
+    bpharm_students = [s for s in DEMO_STUDENTS if s["program"] == "B.Pharm"]
+    if dry_run:
+        names = [f"{s['first_name']} {s['last_name']}" for s in bpharm_students]
+        log(f"  [DRY RUN] would create Student Group '{STUDENT_GROUP_NAME}' with {names}")
+        return
+    try:
+        doc = frappe.new_doc("Student Group")
+        doc.student_group_name = STUDENT_GROUP_NAME
+        if "program" in [f.fieldname for f in doc.meta.fields]:
+            doc.program = "B.Pharm"
+        added = 0
+        for s in bpharm_students:
+            student_id = _student_name(s["first_name"], s["last_name"])
+            if not student_id:
+                log(f"    (skipping {s['first_name']} {s['last_name']} — Student record not found, "
+                    f"run create_demo_students first)")
+                continue
+            doc.append("students", {
+                "student": student_id,
+                "student_name": f"{s['first_name']} {s['last_name']}",
+                "active": 1,
+            })
+            added += 1
+        if added == 0:
+            log("  SKIP: no B.Pharm demo students found to add — create them first.")
+            return
+        doc.insert(ignore_permissions=True)
+        log(f"  CREATED: Student Group '{STUDENT_GROUP_NAME}' with {added} student(s)")
+    except Exception as e:
+        log(f"  !! FAILED to create Student Group: {e}")
+
+
+def create_fee_schedule(dry_run=True):
+    log("\n=== STEP 5d: Fee Schedule — created as DRAFT only (see generate_fee_invoices) ===")
+    fs_name = frappe.db.exists("Fee Structure", {"program": "B.Pharm"})
+    if not fs_name:
+        log("  SKIP: no submitted Fee Structure for B.Pharm found yet.")
+        return
+    if frappe.db.exists("Fee Schedule", {"fee_structure": fs_name, "student_group": STUDENT_GROUP_NAME}):
+        log("  SKIP (exists): Fee Schedule already created for this Fee Structure + Student Group")
+        return
+    if dry_run:
+        log(f"  [DRY RUN] would create a DRAFT Fee Schedule — Fee Structure '{fs_name}', "
+            f"Student Group '{STUDENT_GROUP_NAME}', due {FEE_SCHEDULE_DUE_DATE}. Left as Draft "
+            f"on purpose — read generate_fee_invoices()'s docstring before deciding whether to submit it.")
+        return
+    try:
+        doc = frappe.new_doc("Fee Schedule")
+        doc.fee_structure = fs_name
+        doc.student_group = STUDENT_GROUP_NAME
+        doc.academic_year = ACADEMIC_YEARS[0]["academic_year_name"]
+        term_name = ACADEMIC_TERMS[0]["term_name"] if ACADEMIC_TERMS else None
+        if term_name and "academic_term" in [f.fieldname for f in doc.meta.fields] \
+                and frappe.db.exists("Academic Term", {"term_name": term_name}):
+            doc.academic_term = term_name
+        doc.due_date = getdate(FEE_SCHEDULE_DUE_DATE)
+        doc.insert(ignore_permissions=True)
+        log(f"  CREATED (Draft): Fee Schedule '{doc.name}'.")
+        log("    Open it in the UI and confirm the per-student fee breakup populated correctly —")
+        log("    that table is usually filled in automatically from the Student Group + Fee Structure.")
+        log("    A Draft Fee Schedule is already enough to demo 'this is how due dates and per-student")
+        log("    amounts work' — you do NOT need to submit it for that. See generate_fee_invoices().")
+    except Exception as e:
+        log(f"  !! FAILED to create Fee Schedule: {e}")
+        log("     If it's complaining about a mandatory field (Academic Term, Student Category, etc.),")
+        log("     that's a real, fixable validation error — add it to the script's CONFIG and re-run.")
+
+
+def generate_fee_invoices(dry_run=True):
+    """
+    OPTIONAL — deliberately NOT part of run_all(). Call this yourself, on
+    purpose, after opening the Draft Fee Schedule in the UI and confirming
+    it looks right.
+
+    Submitting a Fee Schedule makes Education generate one Sales Invoice per
+    student in the group. That touches real accounting — default
+    Income/Receivable accounts on your Company, Items, Customer-Student
+    linking — and is genuinely fragile on current Education/ERPNext v15
+    builds. There is an open upstream bug (frappe/erpnext#44876) where this
+    exact step throws on submit, depending on how the install's chart of
+    accounts is set up. It is not something this script can fully verify
+    from here, since it depends on choices specific to your site.
+
+    For a DEMO, you almost certainly don't need this at all — a Draft Fee
+    Schedule already shows the client "this is how due dates and per-student
+    fee amounts work" with zero accounting risk. Only run this if you
+    specifically want to show a real, live invoice number on screen.
+    """
+    log("\n=== OPTIONAL: submit Fee Schedule -> generate Sales Invoices ===")
+    schedule_name = frappe.db.exists("Fee Schedule", {"student_group": STUDENT_GROUP_NAME})
+    if not schedule_name:
+        log("  SKIP: no Fee Schedule found — run create_fee_schedule first.")
+        return
+    if frappe.db.get_value("Fee Schedule", schedule_name, "docstatus") == 1:
+        log(f"  SKIP: Fee Schedule '{schedule_name}' is already submitted.")
+        return
+    if dry_run:
+        log(f"  [DRY RUN] would submit Fee Schedule '{schedule_name}' — generates one Sales Invoice "
+            f"per student in the group. Read this function's docstring before running for real.")
+        return
+
+    # Safety net: force Sales Invoices to land as Draft rather than
+    # auto-submitted, since auto-submit is the exact path the known upstream
+    # bug hits. We restore whatever this was set to afterward.
+    auto_submit_field = _find_field_by_label("Education Settings", "Submit Sales Invoice")
+    original_value = None
+    if auto_submit_field:
+        original_value = frappe.db.get_single_value("Education Settings", auto_submit_field)
+        if original_value:
+            frappe.db.set_single_value("Education Settings", auto_submit_field, 0)
+            log(f"  (temporarily turned off Education Settings.{auto_submit_field} for safety)")
+
+    try:
+        doc = frappe.get_doc("Fee Schedule", schedule_name)
+        doc.submit()
+        log(f"  SUBMITTED: Fee Schedule '{schedule_name}'")
+        try:
+            invoices = frappe.get_all(
+                "Sales Invoice", filters={"fee_schedule": schedule_name},
+                fields=["name", "customer", "grand_total", "docstatus"]
+            )
+            if invoices:
+                for inv in invoices:
+                    log(f"    + Sales Invoice {inv.name} for {inv.customer}: "
+                        f"{inv.grand_total} (docstatus {inv.docstatus})")
+            else:
+                log("    (no linked Sales Invoices found by that filter — check "
+                    "Accounts > Sales Invoice list manually)")
+        except Exception as e:
+            log(f"    Could not look up generated invoices automatically ({e}) — "
+                f"check Accounts > Sales Invoice list manually.")
+    except Exception as e:
+        log(f"  !! FAILED to submit Fee Schedule: {e}")
+        log("     This is the known fragile step. Check the Company's default Income/Receivable")
+        log("     Account, that each Fee Category resolves to a valid Item, and that the student")
+        log("     has (or can get) a linked Customer record — then retry from the UI, where the")
+        log("     error message is usually much more specific than what reaches this console.")
+    finally:
+        if auto_submit_field and original_value:
+            frappe.db.set_single_value("Education Settings", auto_submit_field, original_value)
+
+    frappe.db.commit()
+
+
+# ---------------------------------------------------------------------------
+# STEP 6 — CRM demo leads (admissions pipeline)
+# ---------------------------------------------------------------------------
+
+def create_demo_leads(dry_run=True):
+    log("\n=== STEP 6: CRM demo leads (admissions pipeline) ===")
+    for lead in DEMO_LEADS:
+        if frappe.db.exists("Lead", {"lead_name": lead["lead_name"], "mobile_no": lead["mobile_no"]}):
+            log(f"  SKIP (exists): Lead '{lead['lead_name']}'")
+            continue
+        if dry_run:
+            log(f"  [DRY RUN] would create Lead '{lead['lead_name']}' [{lead['source']}/{lead['status']}]")
+            continue
+        try:
+            doc = frappe.new_doc("Lead")
+            doc.lead_name = lead["lead_name"]
+            doc.mobile_no = lead["mobile_no"]
+            if frappe.db.exists("Lead Source", lead["source"]):
+                doc.source = lead["source"]
+            doc.insert(ignore_permissions=True)
+            try:
+                doc.db_set("status", lead["status"])
+            except Exception:
+                pass
+            try:
+                doc.add_comment("Comment", lead["note"])
+            except Exception:
+                pass
+            log(f"  CREATED: Lead '{lead['lead_name']}' [{lead['source']}/{lead['status']}]")
+        except Exception as e:
+            log(f"  !! FAILED to create Lead '{lead['lead_name']}': {e}")
+
+
+# ---------------------------------------------------------------------------
+# STEP 7 — a few universal, non-branding defaults (won't touch your whitelabel app)
+# ---------------------------------------------------------------------------
+
+def set_safe_system_defaults(dry_run=True):
+    log("\n=== STEP 7: Safe System Settings defaults (country/timezone/date format only) ===")
+    safe_defaults = {"country": "India", "time_zone": "Asia/Kolkata", "date_format": "dd-mm-yyyy"}
+    try:
+        settings = frappe.get_single("System Settings")
+        changed = {}
+        for field, value in safe_defaults.items():
+            current = settings.get(field)
+            if not current:
+                changed[field] = value
+        if not changed:
+            log("  SKIP: System Settings already has these fields set — not touching them.")
+            return
+        if dry_run:
+            log(f"  [DRY RUN] would set System Settings: {changed}")
+            return
+        for field, value in changed.items():
+            settings.set(field, value)
+        settings.save(ignore_permissions=True)
+        log(f"  UPDATED System Settings: {changed}")
+    except Exception as e:
+        log(f"  !! System Settings update skipped: {e}")
+
+
+# ---------------------------------------------------------------------------
+# ORCHESTRATOR
+# ---------------------------------------------------------------------------
+
+def run_all(dry_run=True):
+    log.clear()
+    log(f"\n############  MIPS Tripura ERPNext setup — {'DRY RUN (no changes)' if dry_run else 'LIVE RUN'}  ############")
+    log(f"Detected default company: {COMPANY!r} (used for Departments)")
+
+    steps = [
+        disable_unneeded_modules,
+        create_custom_roles,
+        create_role_profiles,
+        create_academic_years,
+        create_academic_terms,
+        create_departments,
+        create_programs,
+        create_courses,
+        create_demo_instructors,
+        create_demo_students,
+        create_fee_categories,
+        create_fee_structure,
+        create_demo_student_group,
+        create_fee_schedule,
+        create_demo_leads,
+        set_safe_system_defaults,
+    ]
+    for step in steps:
+        try:
+            step(dry_run)
+        except Exception as e:
+            log(f"\n!!! STEP '{step.__name__}' FAILED ENTIRELY: {e}")
+            log("    (continuing with the next step — nothing else was affected)")
+
+    if dry_run:
+        log("\n=== DRY RUN COMPLETE — nothing was changed. ===")
+        log("Review the lines above. If it looks right, run: run_all(dry_run=False)")
+    else:
+        frappe.db.commit()
+        log("\n=== LIVE RUN COMPLETE — changes committed. ===")
+        log("Manual step still needed: hide unwanted Workspaces from the sidebar")
+        log("(Stock, Manufacturing, Quality, Projects, Buying, Support) — see HIDE_WORKSPACES.md.")
+        log("\nNOTE: Fee Schedule was created as a DRAFT on purpose and was NOT submitted.")
+        log("That's enough to demo the fees workflow. Only call generate_fee_invoices(dry_run=False)")
+        log("yourself, separately, if you specifically want real Sales Invoices generated —")
+        log("read its docstring first, it touches accounting and has a known fragile spot.")
+
+    return log
+
+
+print("Loaded. Next: run_all(dry_run=True) to preview, then run_all(dry_run=False) to apply.")
+print("Fees note: run_all() creates a DRAFT Fee Schedule only. generate_fee_invoices() is separate")
+print("and optional — read its docstring before calling it.")
+2026-06-27 06:56:34,326 INFO ipython run_all(dry_run=True)
+2026-06-27 06:56:34,327 INFO ipython === session end ===
+2026-06-27 06:58:42,711 INFO ipython === bench console session ===
+2026-06-27 06:58:42,717 INFO ipython exec(open('/workspaces/mips-erpnext/setup_mips_tripura.py').read(), globals())
+2026-06-27 06:58:42,717 INFO ipython run_all(dry_run=True)
+2026-06-27 06:58:42,717 INFO ipython run_all(dry_run=False)
+2026-06-27 06:58:42,718 INFO ipython === session end ===

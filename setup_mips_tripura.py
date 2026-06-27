@@ -9,10 +9,10 @@ A paste-into-`bench console` script that:
      (Manufacturing, Stock, Quality, Projects, Buying, Support/Helpdesk).
   2. Creates college-specific Roles + Role Profiles (Registrar, Instructor,
      Accounts, Admissions/CRM, HR & Payroll, Student Portal).
-  3. Creates demo academic data: Academic Years, Departments, Programs
+  3. Creates demo academic data: Academic Years/Terms, Departments, Programs
      (B.Pharm / D.Pharm), starter Courses, a few Instructors & Students,
-     a Fee Category/Structure, and a handful of CRM Leads for the
-     admissions pipeline.
+     a Fee Category/Structure, a Student Group, a Draft Fee Schedule, and a
+     handful of CRM Leads for the admissions pipeline.
 
 WHAT THIS DELIBERATELY DOES NOT TOUCH
 --------------------------------------
@@ -25,6 +25,10 @@ WHAT THIS DELIBERATELY DOES NOT TOUCH
   3-click path. Scripting Role.disabled below achieves the *functional*
   equivalent (no one can actually use Stock/Manufacturing/etc.) even
   before you tidy up the sidebar.
+- Actually generating real fee invoices. run_all() creates the Fee Schedule
+  as a Draft and stops there on purpose — submitting it touches your real
+  Chart of Accounts and hits a known fragile spot in this app/version. See
+  generate_fee_invoices()'s docstring if you want to go further.
 
 HOW TO RUN THIS
 ----------------
@@ -93,6 +97,17 @@ COURSES = {
 }
 
 FEE_CATEGORIES = ["Tuition Fee", "Admission Fee", "Library Fee", "Hostel Fee", "Examination Fee"]
+
+# Optional but commonly expected by Fee Structure/Fee Schedule — created
+# best-effort. If your site doesn't actually require these, they're just
+# unused and harmless.
+ACADEMIC_TERMS = [
+    {"term_name": "Semester 1", "academic_year": "2025-26",
+     "term_start_date": "2025-08-01", "term_end_date": "2025-12-31"},
+]
+
+STUDENT_GROUP_NAME = "B.Pharm Demo Group 2025-26"
+FEE_SCHEDULE_DUE_DATE = "2025-09-15"
 
 # DEMO records only — fictional placeholders, not real people. Delete or
 # replace before you onboard real staff/students.
@@ -269,6 +284,28 @@ def create_academic_years(dry_run=True):
             log(f"  !! FAILED to create Academic Year '{name}': {e}")
 
 
+def create_academic_terms(dry_run=True):
+    log("\n=== STEP 3a-2: Academic Terms (best-effort — used by Fee Structure/Schedule if mandatory) ===")
+    for term in ACADEMIC_TERMS:
+        name = term["term_name"]
+        if frappe.db.exists("Academic Term", {"term_name": name, "academic_year": term["academic_year"]}):
+            log(f"  SKIP (exists): Academic Term '{name}' ({term['academic_year']})")
+            continue
+        if dry_run:
+            log(f"  [DRY RUN] would create Academic Term '{name}' ({term['academic_year']})")
+            continue
+        try:
+            doc = frappe.new_doc("Academic Term")
+            doc.term_name = name
+            doc.academic_year = term["academic_year"]
+            doc.term_start_date = getdate(term["term_start_date"])
+            doc.term_end_date = getdate(term["term_end_date"])
+            doc.insert(ignore_permissions=True)
+            log(f"  CREATED: Academic Term '{name}' ({term['academic_year']})")
+        except Exception as e:
+            log(f"  !! Academic Term creation skipped: {e} (fine — it's only used if your site requires it)")
+
+
 def create_departments(dry_run=True):
     log("\n=== STEP 3b: Departments ===")
     for dept in DEPARTMENTS:
@@ -336,6 +373,23 @@ def _department_full_name(label):
     """Department names often get an auto-suffix like ' - MIPS' once a
     company is set — resolve the real primary key from the readable label."""
     return frappe.db.get_value("Department", {"department_name": label}, "name")
+
+
+def _student_name(first_name, last_name):
+    return frappe.db.get_value("Student", {"first_name": first_name, "last_name": last_name}, "name")
+
+
+def _find_field_by_label(doctype, label_substring):
+    """Find a fieldname by matching part of its label, instead of hardcoding
+    a fieldname we're not 100% sure of. Returns None if nothing matches —
+    callers must handle that gracefully, never assume a hit."""
+    try:
+        for f in frappe.get_meta(doctype).fields:
+            if f.label and label_substring.lower() in f.label.lower():
+                return f.fieldname
+    except Exception:
+        pass
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -455,13 +509,18 @@ def create_fee_structure(dry_run=True):
         log("  SKIP (exists): Fee Structure for B.Pharm")
         return
     if dry_run:
-        log("  [DRY RUN] would create a Fee Structure for B.Pharm with starter amounts "
-            "(Tuition 60000, Admission 5000, Library 1000, Hostel 25000, Examination 2000 — edit these)")
+        log("  [DRY RUN] would create + submit a Fee Structure for B.Pharm with starter amounts "
+            "(Tuition 60000, Admission 5000, Library 1000, Hostel 25000, Examination 2000 — edit these). "
+            "Submission is required before it can be used in a Fee Schedule.")
         return
     try:
         doc = frappe.new_doc("Fee Structure")
         doc.program = "B.Pharm"
         doc.academic_year = ACADEMIC_YEARS[0]["academic_year_name"]
+        term_name = ACADEMIC_TERMS[0]["term_name"] if ACADEMIC_TERMS else None
+        if term_name and "academic_term" in [f.fieldname for f in doc.meta.fields] \
+                and frappe.db.exists("Academic Term", {"term_name": term_name}):
+            doc.academic_term = term_name
         starter_amounts = {
             "Tuition Fee": 60000, "Admission Fee": 5000, "Library Fee": 1000,
             "Hostel Fee": 25000, "Examination Fee": 2000,
@@ -470,8 +529,163 @@ def create_fee_structure(dry_run=True):
             doc.append("components", {"fees_category": cat, "amount": amount})
         doc.insert(ignore_permissions=True)
         log("  CREATED: Fee Structure for B.Pharm (placeholder amounts — edit in UI)")
+        try:
+            doc.submit()
+            log("    + submitted (a Fee Schedule can now reference this structure)")
+        except Exception as e:
+            log(f"    !! Could not submit Fee Structure automatically: {e}")
+            log("       Open it in the UI and submit manually before creating a Fee Schedule from it.")
     except Exception as e:
         log(f"  !! Fee Structure creation failed (field names may differ on this site): {e}")
+
+
+def create_demo_student_group(dry_run=True):
+    log("\n=== STEP 5c: Demo Student Group (needed for Fee Schedule) ===")
+    if frappe.db.exists("Student Group", {"student_group_name": STUDENT_GROUP_NAME}):
+        log(f"  SKIP (exists): Student Group '{STUDENT_GROUP_NAME}'")
+        return
+    bpharm_students = [s for s in DEMO_STUDENTS if s["program"] == "B.Pharm"]
+    if dry_run:
+        names = [f"{s['first_name']} {s['last_name']}" for s in bpharm_students]
+        log(f"  [DRY RUN] would create Student Group '{STUDENT_GROUP_NAME}' with {names}")
+        return
+    try:
+        doc = frappe.new_doc("Student Group")
+        doc.student_group_name = STUDENT_GROUP_NAME
+        if "program" in [f.fieldname for f in doc.meta.fields]:
+            doc.program = "B.Pharm"
+        added = 0
+        for s in bpharm_students:
+            student_id = _student_name(s["first_name"], s["last_name"])
+            if not student_id:
+                log(f"    (skipping {s['first_name']} {s['last_name']} — Student record not found, "
+                    f"run create_demo_students first)")
+                continue
+            doc.append("students", {
+                "student": student_id,
+                "student_name": f"{s['first_name']} {s['last_name']}",
+                "active": 1,
+            })
+            added += 1
+        if added == 0:
+            log("  SKIP: no B.Pharm demo students found to add — create them first.")
+            return
+        doc.insert(ignore_permissions=True)
+        log(f"  CREATED: Student Group '{STUDENT_GROUP_NAME}' with {added} student(s)")
+    except Exception as e:
+        log(f"  !! FAILED to create Student Group: {e}")
+
+
+def create_fee_schedule(dry_run=True):
+    log("\n=== STEP 5d: Fee Schedule — created as DRAFT only (see generate_fee_invoices) ===")
+    fs_name = frappe.db.exists("Fee Structure", {"program": "B.Pharm"})
+    if not fs_name:
+        log("  SKIP: no submitted Fee Structure for B.Pharm found yet.")
+        return
+    if frappe.db.exists("Fee Schedule", {"fee_structure": fs_name, "student_group": STUDENT_GROUP_NAME}):
+        log("  SKIP (exists): Fee Schedule already created for this Fee Structure + Student Group")
+        return
+    if dry_run:
+        log(f"  [DRY RUN] would create a DRAFT Fee Schedule — Fee Structure '{fs_name}', "
+            f"Student Group '{STUDENT_GROUP_NAME}', due {FEE_SCHEDULE_DUE_DATE}. Left as Draft "
+            f"on purpose — read generate_fee_invoices()'s docstring before deciding whether to submit it.")
+        return
+    try:
+        doc = frappe.new_doc("Fee Schedule")
+        doc.fee_structure = fs_name
+        doc.student_group = STUDENT_GROUP_NAME
+        doc.academic_year = ACADEMIC_YEARS[0]["academic_year_name"]
+        term_name = ACADEMIC_TERMS[0]["term_name"] if ACADEMIC_TERMS else None
+        if term_name and "academic_term" in [f.fieldname for f in doc.meta.fields] \
+                and frappe.db.exists("Academic Term", {"term_name": term_name}):
+            doc.academic_term = term_name
+        doc.due_date = getdate(FEE_SCHEDULE_DUE_DATE)
+        doc.insert(ignore_permissions=True)
+        log(f"  CREATED (Draft): Fee Schedule '{doc.name}'.")
+        log("    Open it in the UI and confirm the per-student fee breakup populated correctly —")
+        log("    that table is usually filled in automatically from the Student Group + Fee Structure.")
+        log("    A Draft Fee Schedule is already enough to demo 'this is how due dates and per-student")
+        log("    amounts work' — you do NOT need to submit it for that. See generate_fee_invoices().")
+    except Exception as e:
+        log(f"  !! FAILED to create Fee Schedule: {e}")
+        log("     If it's complaining about a mandatory field (Academic Term, Student Category, etc.),")
+        log("     that's a real, fixable validation error — add it to the script's CONFIG and re-run.")
+
+
+def generate_fee_invoices(dry_run=True):
+    """
+    OPTIONAL — deliberately NOT part of run_all(). Call this yourself, on
+    purpose, after opening the Draft Fee Schedule in the UI and confirming
+    it looks right.
+
+    Submitting a Fee Schedule makes Education generate one Sales Invoice per
+    student in the group. That touches real accounting — default
+    Income/Receivable accounts on your Company, Items, Customer-Student
+    linking — and is genuinely fragile on current Education/ERPNext v15
+    builds. There is an open upstream bug (frappe/erpnext#44876) where this
+    exact step throws on submit, depending on how the install's chart of
+    accounts is set up. It is not something this script can fully verify
+    from here, since it depends on choices specific to your site.
+
+    For a DEMO, you almost certainly don't need this at all — a Draft Fee
+    Schedule already shows the client "this is how due dates and per-student
+    fee amounts work" with zero accounting risk. Only run this if you
+    specifically want to show a real, live invoice number on screen.
+    """
+    log("\n=== OPTIONAL: submit Fee Schedule -> generate Sales Invoices ===")
+    schedule_name = frappe.db.exists("Fee Schedule", {"student_group": STUDENT_GROUP_NAME})
+    if not schedule_name:
+        log("  SKIP: no Fee Schedule found — run create_fee_schedule first.")
+        return
+    if frappe.db.get_value("Fee Schedule", schedule_name, "docstatus") == 1:
+        log(f"  SKIP: Fee Schedule '{schedule_name}' is already submitted.")
+        return
+    if dry_run:
+        log(f"  [DRY RUN] would submit Fee Schedule '{schedule_name}' — generates one Sales Invoice "
+            f"per student in the group. Read this function's docstring before running for real.")
+        return
+
+    # Safety net: force Sales Invoices to land as Draft rather than
+    # auto-submitted, since auto-submit is the exact path the known upstream
+    # bug hits. We restore whatever this was set to afterward.
+    auto_submit_field = _find_field_by_label("Education Settings", "Submit Sales Invoice")
+    original_value = None
+    if auto_submit_field:
+        original_value = frappe.db.get_single_value("Education Settings", auto_submit_field)
+        if original_value:
+            frappe.db.set_single_value("Education Settings", auto_submit_field, 0)
+            log(f"  (temporarily turned off Education Settings.{auto_submit_field} for safety)")
+
+    try:
+        doc = frappe.get_doc("Fee Schedule", schedule_name)
+        doc.submit()
+        log(f"  SUBMITTED: Fee Schedule '{schedule_name}'")
+        try:
+            invoices = frappe.get_all(
+                "Sales Invoice", filters={"fee_schedule": schedule_name},
+                fields=["name", "customer", "grand_total", "docstatus"]
+            )
+            if invoices:
+                for inv in invoices:
+                    log(f"    + Sales Invoice {inv.name} for {inv.customer}: "
+                        f"{inv.grand_total} (docstatus {inv.docstatus})")
+            else:
+                log("    (no linked Sales Invoices found by that filter — check "
+                    "Accounts > Sales Invoice list manually)")
+        except Exception as e:
+            log(f"    Could not look up generated invoices automatically ({e}) — "
+                f"check Accounts > Sales Invoice list manually.")
+    except Exception as e:
+        log(f"  !! FAILED to submit Fee Schedule: {e}")
+        log("     This is the known fragile step. Check the Company's default Income/Receivable")
+        log("     Account, that each Fee Category resolves to a valid Item, and that the student")
+        log("     has (or can get) a linked Customer record — then retry from the UI, where the")
+        log("     error message is usually much more specific than what reaches this console.")
+    finally:
+        if auto_submit_field and original_value:
+            frappe.db.set_single_value("Education Settings", auto_submit_field, original_value)
+
+    frappe.db.commit()
 
 
 # ---------------------------------------------------------------------------
@@ -549,6 +763,7 @@ def run_all(dry_run=True):
         create_custom_roles,
         create_role_profiles,
         create_academic_years,
+        create_academic_terms,
         create_departments,
         create_programs,
         create_courses,
@@ -556,6 +771,8 @@ def run_all(dry_run=True):
         create_demo_students,
         create_fee_categories,
         create_fee_structure,
+        create_demo_student_group,
+        create_fee_schedule,
         create_demo_leads,
         set_safe_system_defaults,
     ]
@@ -574,8 +791,14 @@ def run_all(dry_run=True):
         log("\n=== LIVE RUN COMPLETE — changes committed. ===")
         log("Manual step still needed: hide unwanted Workspaces from the sidebar")
         log("(Stock, Manufacturing, Quality, Projects, Buying, Support) — see HIDE_WORKSPACES.md.")
+        log("\nNOTE: Fee Schedule was created as a DRAFT on purpose and was NOT submitted.")
+        log("That's enough to demo the fees workflow. Only call generate_fee_invoices(dry_run=False)")
+        log("yourself, separately, if you specifically want real Sales Invoices generated —")
+        log("read its docstring first, it touches accounting and has a known fragile spot.")
 
     return LOG
 
 
 print("Loaded. Next: run_all(dry_run=True) to preview, then run_all(dry_run=False) to apply.")
+print("Fees note: run_all() creates a DRAFT Fee Schedule only. generate_fee_invoices() is separate")
+print("and optional — read its docstring before calling it.")
