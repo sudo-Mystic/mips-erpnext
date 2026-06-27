@@ -1,0 +1,152 @@
+2026-06-23 10:31:46,457 DEBUG cd mips-bench && uv venv env --seed --python python3
+2026-06-23 10:31:46,986 LOG Getting frappe
+2026-06-23 10:31:46,986 DEBUG cd mips-bench/apps && git clone https://github.com/frappe/frappe.git  --depth 1 --origin upstream
+2026-06-23 10:31:51,139 LOG Installing frappe
+2026-06-23 10:31:51,143 DEBUG cd /workspaces/mips-erpnext/mips-bench && uv pip install --quiet -e /workspaces/mips-erpnext/mips-bench/apps/frappe  --python /workspaces/mips-erpnext/mips-bench/env/bin/python
+2026-06-23 10:32:04,531 DEBUG cd /workspaces/mips-erpnext/mips-bench/apps/frappe && yarn install --check-files
+2026-06-23 10:32:34,276 DEBUG cd mips-bench && bench build
+2026-06-23 10:32:34,478 INFO /home/codespace/.local/bin/bench build
+2026-06-23 10:33:02,765 LOG setting up backups
+2026-06-23 10:33:02,793 LOG backups were set up
+2026-06-23 10:33:02,794 INFO Bench mips-bench initialized
+2026-06-23 10:34:40,210 INFO /home/codespace/.local/bin/bench new-site mips.localhost
+2026-06-23 10:36:01,492 INFO /home/codespace/.local/bin/bench new-site mips.localhost
+2026-06-23 10:37:26,150 INFO /home/codespace/.local/bin/bench get-app erpnext
+2026-06-23 10:37:26,665 LOG Getting erpnext
+2026-06-23 10:37:26,665 DEBUG cd ./apps && git clone https://github.com/frappe/erpnext.git  --depth 1 --origin upstream
+2026-06-23 10:37:30,489 LOG Installing erpnext
+2026-06-23 10:37:30,490 DEBUG cd /workspaces/mips-erpnext/mips-bench && uv pip install --quiet -e /workspaces/mips-erpnext/mips-bench/apps/erpnext  --python /workspaces/mips-erpnext/mips-bench/env/bin/python
+2026-06-23 10:37:34,475 DEBUG cd /workspaces/mips-erpnext/mips-bench/apps/erpnext && yarn install --check-files
+2026-06-23 10:38:31,449 DEBUG bench build --app erpnext
+2026-06-23 10:38:31,756 INFO /home/codespace/.local/bin/bench build --app erpnext
+2026-06-23 10:38:49,568 INFO /home/codespace/.local/bin/bench get-app education
+2026-06-23 10:38:50,078 LOG Getting education
+2026-06-23 10:38:50,078 DEBUG cd ./apps && git clone https://github.com/frappe/education.git  --depth 1 --origin upstream
+2026-06-23 10:38:52,126 LOG Installing education
+2026-06-23 10:38:52,127 DEBUG cd /workspaces/mips-erpnext/mips-bench && uv pip install --quiet -e /workspaces/mips-erpnext/mips-bench/apps/education  --python /workspaces/mips-erpnext/mips-bench/env/bin/python
+2026-06-23 10:38:53,013 DEBUG cd /workspaces/mips-erpnext/mips-bench/apps/education && yarn install --check-files
+2026-06-23 10:39:25,914 DEBUG bench build --app education
+2026-06-23 10:39:26,132 INFO /home/codespace/.local/bin/bench build --app education
+2026-06-23 10:39:41,307 INFO /home/codespace/.local/bin/bench --site mips.localhost install-app erpnext
+2026-06-23 10:40:34,052 INFO /home/codespace/.local/bin/bench --site mips.localhost install-app education
+2026-06-23 10:41:03,247 INFO /home/codespace/.local/bin/bench --site mips.localhost install-app erpnext
+2026-06-23 10:41:09,494 INFO /home/codespace/.local/bin/bench --site mips.localhost install-app education
+2026-06-23 10:43:00,089 INFO /home/codespace/.local/bin/bench start
+2026-06-23 10:43:01,147 INFO /home/codespace/.local/bin/bench worker
+2026-06-23 10:43:01,212 INFO /home/codespace/.local/bin/bench watch
+2026-06-23 10:43:01,422 INFO /home/codespace/.local/bin/bench socketio
+2026-06-23 10:43:01,665 INFO /home/codespace/.local/bin/bench serve --port 8000
+2026-06-23 10:43:01,672 INFO /home/codespace/.local/bin/bench schedule
+2026-06-23 10:43:30,363 INFO /home/codespace/.local/bin/bench --site mips.localhost install-app erpnext
+2026-06-23 10:43:33,872 INFO /home/codespace/.local/bin/bench --site mips.localhost install-app education
+2026-06-23 10:43:57,955 INFO /home/codespace/.local/bin/bench get-app https://github.com/bhavesh95863/whitelabel
+2026-06-23 10:43:57,973 LOG Getting whitelabel
+2026-06-23 10:43:57,973 DEBUG cd ./apps && git clone https://github.com/bhavesh95863/whitelabel  --depth 1 --origin upstream
+2026-06-23 10:43:59,203 LOG Installing whitelabel
+2026-06-23 10:43:59,204 DEBUG cd /workspaces/mips-erpnext/mips-bench && uv pip install --quiet -e /workspaces/mips-erpnext/mips-bench/apps/whitelabel  --python /workspaces/mips-erpnext/mips-bench/env/bin/python
+2026-06-23 10:44:00,022 WARNING cd /workspaces/mips-erpnext/mips-bench && uv pip install --quiet -e /workspaces/mips-erpnext/mips-bench/apps/whitelabel  --python /workspaces/mips-erpnext/mips-bench/env/bin/python executed with exit code 1
+2026-06-23 10:44:00,023 WARNING /home/codespace/.local/bin/bench get-app https://github.com/bhavesh95863/whitelabel executed with exit code 167
+2026-06-23 10:44:00,995 INFO /home/codespace/.local/bin/bench --site mips.localhost install-app whitelabel
+2026-06-23 10:44:03,625 INFO /home/codespace/.local/bin/bench migrate
+2026-06-23 10:44:04,824 INFO /home/codespace/.local/bin/bench clear-cache
+2026-06-23 10:44:05,516 INFO /home/codespace/.local/bin/bench start
+2026-06-23 10:44:06,566 INFO /home/codespace/.local/bin/bench worker
+2026-06-23 10:44:07,160 INFO /home/codespace/.local/bin/bench schedule
+2026-06-23 10:44:07,165 INFO /home/codespace/.local/bin/bench socketio
+2026-06-23 10:44:07,183 INFO /home/codespace/.local/bin/bench watch
+2026-06-23 10:44:07,284 INFO /home/codespace/.local/bin/bench serve --port 8000
+2026-06-23 10:47:14,218 INFO /home/codespace/.local/bin/bench pip install -e apps/whitelabel
+2026-06-23 10:48:33,694 INFO /home/codespace/.local/bin/bench pip install --no-deps -e apps/whitelabel
+2026-06-23 10:48:44,820 INFO /home/codespace/.local/bin/bench --site mips.localhost install-app whitelabel
+2026-06-23 10:48:46,310 INFO /home/codespace/.local/bin/bench migrate
+2026-06-23 10:48:47,525 INFO /home/codespace/.local/bin/bench clear-cache
+2026-06-23 10:48:48,524 INFO /home/codespace/.local/bin/bench start
+2026-06-23 10:48:49,478 INFO /home/codespace/.local/bin/bench schedule
+2026-06-23 10:48:49,796 INFO /home/codespace/.local/bin/bench serve --port 8000
+2026-06-23 10:48:49,815 INFO /home/codespace/.local/bin/bench worker
+2026-06-23 10:48:49,990 INFO /home/codespace/.local/bin/bench watch
+2026-06-23 10:48:49,987 INFO /home/codespace/.local/bin/bench socketio
+2026-06-23 10:51:17,161 INFO /home/codespace/.local/bin/bench use mips.localhost
+2026-06-23 10:51:24,207 INFO /home/codespace/.local/bin/bench start
+2026-06-23 10:51:25,119 INFO /home/codespace/.local/bin/bench socketio
+2026-06-23 10:51:25,478 INFO /home/codespace/.local/bin/bench schedule
+2026-06-23 10:51:25,597 INFO /home/codespace/.local/bin/bench watch
+2026-06-23 10:51:25,754 INFO /home/codespace/.local/bin/bench serve --port 8000
+2026-06-23 10:51:25,813 INFO /home/codespace/.local/bin/bench worker
+2026-06-23 10:56:03,897 INFO /home/codespace/.local/bin/bench start
+2026-06-23 10:56:05,559 INFO /home/codespace/.local/bin/bench schedule
+2026-06-23 10:56:05,654 INFO /home/codespace/.local/bin/bench worker
+2026-06-23 10:56:05,662 INFO /home/codespace/.local/bin/bench watch
+2026-06-23 10:56:05,723 INFO /home/codespace/.local/bin/bench socketio
+2026-06-23 10:56:05,768 INFO /home/codespace/.local/bin/bench serve --port 8000
+2026-06-23 11:01:14,013 INFO /home/codespace/.local/bin/bench --site mips.localhost install-app whitelabel
+2026-06-23 11:01:18,664 INFO /home/codespace/.local/bin/bench start
+2026-06-23 11:01:19,914 INFO /home/codespace/.local/bin/bench socketio
+2026-06-23 11:01:20,157 INFO /home/codespace/.local/bin/bench schedule
+2026-06-23 11:01:20,162 INFO /home/codespace/.local/bin/bench serve --port 8000
+2026-06-23 11:01:20,239 INFO /home/codespace/.local/bin/bench watch
+2026-06-23 11:01:20,263 INFO /home/codespace/.local/bin/bench worker
+2026-06-23 11:01:57,994 INFO /home/codespace/.local/bin/bench --site mips.localhost clear-cache
+2026-06-23 11:01:59,370 INFO /home/codespace/.local/bin/bench --site mips.localhost migrate
+2026-06-23 11:02:00,956 INFO /home/codespace/.local/bin/bench start
+2026-06-23 11:02:02,514 INFO /home/codespace/.local/bin/bench schedule
+2026-06-23 11:02:02,567 INFO /home/codespace/.local/bin/bench socketio
+2026-06-23 11:02:02,641 INFO /home/codespace/.local/bin/bench watch
+2026-06-23 11:02:02,809 INFO /home/codespace/.local/bin/bench serve --port 8000
+2026-06-23 11:02:02,870 INFO /home/codespace/.local/bin/bench worker
+2026-06-23 11:03:03,922 INFO /home/codespace/.local/bin/bench --site mips.localhost migrate
+2026-06-23 11:03:11,724 INFO /home/codespace/.local/bin/bench --site mips.localhost install-app whitelabel
+2026-06-23 11:04:10,375 INFO /home/codespace/.local/bin/bench --site mips.localhost install-app whitelabel1
+2026-06-23 11:04:13,005 INFO /home/codespace/.local/bin/bench --site mips.localhost install-app whitelabel
+2026-06-23 11:04:24,720 INFO /home/codespace/.local/bin/bench start
+2026-06-23 11:04:25,755 INFO /home/codespace/.local/bin/bench schedule
+2026-06-23 11:04:26,143 INFO /home/codespace/.local/bin/bench serve --port 8000
+2026-06-23 11:04:26,242 INFO /home/codespace/.local/bin/bench watch
+2026-06-23 11:04:26,245 INFO /home/codespace/.local/bin/bench worker
+2026-06-23 11:04:26,344 INFO /home/codespace/.local/bin/bench socketio
+2026-06-23 11:35:20,769 INFO /home/codespace/.local/bin/bench --site mips.localhost console
+2026-06-24 09:41:33,083 INFO /home/codespace/.local/bin/bench --site mips.localhost console
+2026-06-24 09:42:08,721 INFO /home/codespace/.local/bin/bench start
+2026-06-24 09:42:10,007 INFO /home/codespace/.local/bin/bench schedule
+2026-06-24 09:42:10,331 INFO /home/codespace/.local/bin/bench worker
+2026-06-24 09:42:10,366 INFO /home/codespace/.local/bin/bench socketio
+2026-06-24 09:42:10,474 INFO /home/codespace/.local/bin/bench serve --port 8000
+2026-06-24 09:42:10,552 INFO /home/codespace/.local/bin/bench watch
+2026-06-24 09:42:57,825 INFO /home/codespace/.local/bin/bench --site mips.localhost console
+2026-06-24 09:43:14,519 INFO /home/codespace/.local/bin/bench start
+2026-06-24 09:43:15,664 INFO /home/codespace/.local/bin/bench socketio
+2026-06-24 09:43:16,065 INFO /home/codespace/.local/bin/bench worker
+2026-06-24 09:43:16,141 INFO /home/codespace/.local/bin/bench schedule
+2026-06-24 09:43:16,448 INFO /home/codespace/.local/bin/bench watch
+2026-06-24 09:43:16,453 INFO /home/codespace/.local/bin/bench serve --port 8000
+2026-06-24 09:56:20,461 INFO /home/codespace/.local/bin/bench --site mips.localhost console
+2026-06-24 09:57:11,933 INFO /home/codespace/.local/bin/bench start
+2026-06-24 09:57:12,954 INFO /home/codespace/.local/bin/bench worker
+2026-06-24 09:57:13,047 INFO /home/codespace/.local/bin/bench watch
+2026-06-24 09:57:13,165 INFO /home/codespace/.local/bin/bench socketio
+2026-06-24 09:57:13,275 INFO /home/codespace/.local/bin/bench serve --port 8000
+2026-06-24 09:57:13,425 INFO /home/codespace/.local/bin/bench schedule
+2026-06-24 10:01:22,777 INFO /home/codespace/.local/bin/bench start
+2026-06-24 10:01:23,773 INFO /home/codespace/.local/bin/bench worker
+2026-06-24 10:01:23,854 INFO /home/codespace/.local/bin/bench serve --port 8000
+2026-06-24 10:01:23,880 INFO /home/codespace/.local/bin/bench socketio
+2026-06-24 10:01:23,870 INFO /home/codespace/.local/bin/bench schedule
+2026-06-24 10:01:24,060 INFO /home/codespace/.local/bin/bench watch
+2026-06-24 10:05:00,466 INFO /home/codespace/.local/bin/bench --site mips.localhost console
+2026-06-24 10:10:45,972 INFO /home/codespace/.local/bin/bench --site mips.localhost console
+2026-06-24 10:26:54,443 INFO /home/codespace/.local/bin/bench --site mipstripura.in list-apps
+2026-06-24 10:27:02,577 INFO /home/codespace/.local/bin/bench --site mips.localhost list-apps
+2026-06-24 10:28:24,947 INFO /home/codespace/.local/bin/bench version
+2026-06-24 10:31:25,613 INFO /home/codespace/.local/bin/bench start
+2026-06-24 10:31:26,786 INFO /home/codespace/.local/bin/bench schedule
+2026-06-24 10:31:27,278 INFO /home/codespace/.local/bin/bench serve --port 8000
+2026-06-24 10:31:27,374 INFO /home/codespace/.local/bin/bench worker
+2026-06-24 10:31:27,390 INFO /home/codespace/.local/bin/bench socketio
+2026-06-24 10:31:27,395 INFO /home/codespace/.local/bin/bench watch
+2026-06-27 05:52:03,595 INFO /home/codespace/.local/bin/bench start
+2026-06-27 05:52:04,814 INFO /home/codespace/.local/bin/bench worker
+2026-06-27 05:52:05,086 INFO /home/codespace/.local/bin/bench watch
+2026-06-27 05:52:05,205 INFO /home/codespace/.local/bin/bench socketio
+2026-06-27 05:52:05,221 INFO /home/codespace/.local/bin/bench schedule
+2026-06-27 05:52:05,322 INFO /home/codespace/.local/bin/bench serve --port 8000
+2026-06-27 06:00:02,713 INFO /home/codespace/.local/bin/bench --verbose --site all backup

@@ -1,0 +1,6 @@
+set -o pipefail; /usr/bin/mariadb-dump --user=_af6bdba48c94627a --host=127.0.0.1 --port=3306 --password=********** --single-transaction --quick --lock-tables=false _af6bdba48c94627a | /usr/bin/gzip >> ./mips.localhost/private/backups/20260627_113005-mips_localhost-database.sql.gz
+
+Backup Summary for mips.localhost at 2026-06-27 11:30:11.323076
+Config  : /workspaces/mips-erpnext/mips-bench/sites/mips.localhost/private/backups/20260627_113005-mips_localhost-site_config_backup.json 310.0B
+Database: /workspaces/mips-erpnext/mips-bench/sites/mips.localhost/private/backups/20260627_113005-mips_localhost-database.sql.gz 1005.7KiB
+Backup for Site mips.localhost has been successfully completed

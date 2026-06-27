@@ -1,0 +1,13 @@
+{
+ "app_logo_url": "https://mipstripura.in/wp-content/themes/mips-custom/assets/images/logo-mips-1.png",
+ "db_name": "_af6bdba48c94627a",
+ "db_password": "2N0B0SL9eGEPJEqu",
+ "db_type": "mariadb",
+ "db_user": "_af6bdba48c94627a",
+ "installed_apps": [
+  "frappe",
+  "erpnext",
+  "education",
+  "whitelabel"
+ ]
+}

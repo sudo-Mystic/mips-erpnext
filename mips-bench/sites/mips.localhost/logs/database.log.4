@@ -1,0 +1,3020 @@
+2026-06-23 10:39:52,809 WARNING database DDL Query made to DB:
+create table `tabOverdue Payment` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`sales_invoice` varchar(140),
+`payment_schedule` varchar(140),
+`dunning_level` int(11) NOT NULL DEFAULT 1,
+`payment_term` varchar(140),
+`description` text,
+`due_date` date,
+`overdue_days` varchar(140),
+`mode_of_payment` varchar(140),
+`invoice_portion` decimal(21,9) NOT NULL DEFAULT 0.0,
+`payment_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`outstanding` decimal(21,9) NOT NULL DEFAULT 0.0,
+`paid_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`discounted_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`interest` decimal(21,9) NOT NULL DEFAULT 0.0,
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:52,952 WARNING database DDL Query made to DB:
+create table `tabPayment Entry` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`naming_series` varchar(140),
+`payment_type` varchar(140),
+`payment_order_status` varchar(140),
+`posting_date` date,
+`company` varchar(140),
+`mode_of_payment` varchar(140),
+`party_type` varchar(140),
+`party` varchar(140),
+`party_name` varchar(140),
+`book_advance_payments_in_separate_party_account` tinyint(4) NOT NULL DEFAULT 0,
+`reconcile_on_advance_payment_date` tinyint(4) NOT NULL DEFAULT 0,
+`apply_tds` tinyint(4) NOT NULL DEFAULT 0,
+`tax_withholding_category` varchar(140),
+`bank_account` varchar(140),
+`party_bank_account` varchar(140),
+`contact_person` varchar(140),
+`contact_email` varchar(140),
+`paid_from` varchar(140),
+`paid_from_account_type` varchar(140),
+`paid_from_account_currency` varchar(140),
+`paid_to` varchar(140),
+`paid_to_account_type` varchar(140),
+`paid_to_account_currency` varchar(140),
+`paid_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`paid_amount_after_tax` decimal(21,9) NOT NULL DEFAULT 0.0,
+`source_exchange_rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`base_paid_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`base_paid_amount_after_tax` decimal(21,9) NOT NULL DEFAULT 0.0,
+`received_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`received_amount_after_tax` decimal(21,9) NOT NULL DEFAULT 0.0,
+`target_exchange_rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`base_received_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`base_received_amount_after_tax` decimal(21,9) NOT NULL DEFAULT 0.0,
+`total_allocated_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`base_total_allocated_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`unallocated_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`difference_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`purchase_taxes_and_charges_template` varchar(140),
+`sales_taxes_and_charges_template` varchar(140),
+`base_total_taxes_and_charges` decimal(21,9) NOT NULL DEFAULT 0.0,
+`total_taxes_and_charges` decimal(21,9) NOT NULL DEFAULT 0.0,
+`tax_withholding_group` varchar(140),
+`ignore_tax_withholding_threshold` tinyint(4) NOT NULL DEFAULT 0,
+`override_tax_withholding_entries` tinyint(4) NOT NULL DEFAULT 0,
+`reference_no` varchar(140),
+`reference_date` date,
+`clearance_date` date,
+`project` varchar(140),
+`cost_center` varchar(140),
+`status` varchar(140) DEFAULT 'Draft',
+`custom_remarks` tinyint(4) NOT NULL DEFAULT 0,
+`remarks` text,
+`base_in_words` text,
+`is_opening` varchar(140) DEFAULT 'No',
+`title` varchar(140),
+`letter_head` varchar(140),
+`print_heading` varchar(140),
+`bank` varchar(140),
+`bank_account_no` varchar(140),
+`payment_order` varchar(140),
+`in_words` text,
+`amended_from` varchar(140),
+`auto_repeat` varchar(140),
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index `party_type`(`party_type`),
+index `reference_date`(`reference_date`),
+index `is_opening`(`is_opening`),
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:53,199 WARNING database DDL Query made to DB:
+create table `tabAdvance Taxes and Charges` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`add_deduct_tax` varchar(140),
+`charge_type` varchar(140),
+`row_id` varchar(140),
+`account_head` varchar(140),
+`description` text,
+`included_in_paid_amount` tinyint(4) NOT NULL DEFAULT 0,
+`set_by_item_tax_template` tinyint(4) NOT NULL DEFAULT 0,
+`is_tax_withholding_account` tinyint(4) NOT NULL DEFAULT 0,
+`cost_center` varchar(140),
+`project` varchar(140),
+`rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`currency` varchar(140),
+`net_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`tax_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`total` decimal(21,9) NOT NULL DEFAULT 0.0,
+`base_tax_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`base_net_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`base_total` decimal(21,9) NOT NULL DEFAULT 0.0,
+index `account_head`(`account_head`),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:53,255 WARNING database DDL Query made to DB:
+create table `tabCashier Closing Payments` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`mode_of_payment` varchar(140),
+`amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:53,298 WARNING database DDL Query made to DB:
+create table `tabPurchase Taxes and Charges Template` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`title` varchar(140),
+`is_default` tinyint(4) NOT NULL DEFAULT 0,
+`disabled` tinyint(4) NOT NULL DEFAULT 0,
+`company` varchar(140),
+`tax_category` varchar(140),
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:53,438 WARNING database DDL Query made to DB:
+create table `tabPayment Request` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`payment_request_type` varchar(140) DEFAULT 'Inward',
+`transaction_date` date,
+`failed_reason` varchar(140),
+`naming_series` varchar(140),
+`company` varchar(140),
+`mode_of_payment` varchar(140),
+`party_type` varchar(140),
+`party` varchar(140),
+`party_name` varchar(140),
+`reference_doctype` varchar(140),
+`reference_name` varchar(140),
+`grand_total` decimal(21,9) NOT NULL DEFAULT 0.0,
+`currency` varchar(140),
+`is_a_subscription` tinyint(4) NOT NULL DEFAULT 0,
+`outstanding_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`party_account_currency` varchar(140),
+`bank_account` varchar(140),
+`bank` varchar(140),
+`bank_account_no` varchar(140),
+`account` varchar(140),
+`iban` varchar(140),
+`branch_code` varchar(140),
+`swift_number` varchar(140),
+`cost_center` varchar(140),
+`project` varchar(140),
+`print_format` varchar(140),
+`email_to` varchar(140),
+`subject` varchar(140),
+`payment_gateway_account` varchar(140),
+`status` varchar(140) DEFAULT 'Draft',
+`make_sales_invoice` tinyint(4) NOT NULL DEFAULT 0,
+`message` text,
+`mute_email` tinyint(4) NOT NULL DEFAULT 0,
+`payment_gateway` varchar(140),
+`payment_account` varchar(140),
+`payment_channel` varchar(140),
+`payment_order` varchar(140),
+`amended_from` varchar(140),
+`payment_url` varchar(500),
+`phone_number` varchar(140),
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index `reference_name`(`reference_name`),
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:53,476 WARNING database DDL Query made to DB:
+create table `tabParty Account` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`company` varchar(140),
+`account` varchar(140),
+`advance_account` varchar(140),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:53,548 WARNING database DDL Query made to DB:
+create table `tabShare Transfer` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`transfer_type` varchar(140),
+`date` date,
+`from_shareholder` varchar(140),
+`from_folio_no` varchar(140),
+`to_shareholder` varchar(140),
+`to_folio_no` varchar(140),
+`equity_or_liability_account` varchar(140),
+`asset_account` varchar(140),
+`share_type` varchar(140),
+`from_no` int(11) NOT NULL DEFAULT 0,
+`rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`no_of_shares` int(11) NOT NULL DEFAULT 0,
+`to_no` int(11) NOT NULL DEFAULT 0,
+`amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`company` varchar(140),
+`remarks` longtext,
+`amended_from` varchar(140),
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:53,592 WARNING database DDL Query made to DB:
+create table `tabParty Link` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`primary_role` varchar(140),
+`secondary_role` varchar(140),
+`primary_party` varchar(140),
+`secondary_party` varchar(140),
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:53,637 WARNING database DDL Query made to DB:
+create table `tabProcess Statement Of Accounts CC` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`cc` varchar(140),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:53,741 WARNING database DDL Query made to DB:
+create table `tabTax Rule` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`tax_type` varchar(140) DEFAULT 'Sales',
+`use_for_shopping_cart` tinyint(4) NOT NULL DEFAULT 1,
+`sales_tax_template` varchar(140),
+`purchase_tax_template` varchar(140),
+`customer` varchar(140),
+`supplier` varchar(140),
+`item` varchar(140),
+`billing_city` varchar(140),
+`billing_county` varchar(140),
+`billing_state` varchar(140),
+`billing_zipcode` varchar(140),
+`billing_country` varchar(140),
+`tax_category` varchar(140),
+`customer_group` varchar(140),
+`supplier_group` varchar(140),
+`item_group` varchar(140),
+`shipping_city` varchar(140),
+`shipping_county` varchar(140),
+`shipping_state` varchar(140),
+`shipping_zipcode` varchar(140),
+`shipping_country` varchar(140),
+`from_date` date,
+`to_date` date,
+`priority` int(11) NOT NULL DEFAULT 1,
+`company` varchar(140),
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:53,789 WARNING database DDL Query made to DB:
+create table `tabDiscounted Invoice` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`sales_invoice` varchar(140),
+`customer` varchar(140),
+`posting_date` date,
+`outstanding_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`debit_to` varchar(140),
+index `sales_invoice`(`sales_invoice`),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:53,875 WARNING database DDL Query made to DB:
+create table `tabSubscription` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`party_type` varchar(140),
+`party` varchar(140),
+`company` varchar(140),
+`status` varchar(140),
+`start_date` date,
+`end_date` date,
+`cancelation_date` date,
+`trial_period_start` date,
+`trial_period_end` date,
+`follow_calendar_months` tinyint(4) NOT NULL DEFAULT 0,
+`generate_new_invoices_past_due_date` tinyint(4) NOT NULL DEFAULT 0,
+`submit_invoice` tinyint(4) NOT NULL DEFAULT 1,
+`days_until_due` int(11) NOT NULL DEFAULT 0,
+`generate_invoice_at` varchar(140) DEFAULT 'Postpaid (bill at period end)',
+`number_of_days` int(11) NOT NULL DEFAULT 0,
+`cancel_at_period_end` tinyint(4) NOT NULL DEFAULT 0,
+`current_invoice_start` date,
+`current_invoice_end` date,
+`next_billing_period_start` date,
+`next_billing_period_end` date,
+`sales_tax_template` varchar(140),
+`purchase_tax_template` varchar(140),
+`apply_additional_discount` varchar(140),
+`additional_discount_percentage` decimal(21,9) NOT NULL DEFAULT 0.0,
+`additional_discount_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`cost_center` varchar(140),
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:53,945 WARNING database DDL Query made to DB:
+create table `tabCoupon Code` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`coupon_name` varchar(140) UNIQUE,
+`coupon_type` varchar(140),
+`customer` varchar(140),
+`coupon_code` varchar(140) UNIQUE,
+`from_external_ecomm_platform` tinyint(4) NOT NULL DEFAULT 0,
+`pricing_rule` varchar(140),
+`valid_from` date,
+`valid_upto` date,
+`maximum_use` int(11) NOT NULL DEFAULT 0,
+`used` int(11) NOT NULL DEFAULT 0,
+`description` longtext,
+`amended_from` varchar(140),
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:54,000 WARNING database DDL Query made to DB:
+create table `tabShare Balance` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`share_type` varchar(140),
+`from_no` int(11) NOT NULL DEFAULT 0,
+`rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`no_of_shares` int(11) NOT NULL DEFAULT 0,
+`to_no` int(11) NOT NULL DEFAULT 0,
+`amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`is_company` tinyint(4) NOT NULL DEFAULT 0,
+`current_state` varchar(140),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:54,044 WARNING database DDL Query made to DB:
+create table `tabClosed Document` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`document_type` varchar(140),
+`closed` tinyint(4) NOT NULL DEFAULT 0,
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:54,091 WARNING database DDL Query made to DB:
+create table `tabPOS Item Group` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`item_group` varchar(140),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:54,130 WARNING database DDL Query made to DB:
+create table `tabCampaign Item` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`campaign` varchar(140),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:54,197 WARNING database DDL Query made to DB:
+create table `tabAccount Closing Balance` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`closing_date` date,
+`account` varchar(140),
+`cost_center` varchar(140),
+`debit` decimal(21,9) NOT NULL DEFAULT 0.0,
+`credit` decimal(21,9) NOT NULL DEFAULT 0.0,
+`reporting_currency_exchange_rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`debit_in_reporting_currency` decimal(21,9) NOT NULL DEFAULT 0.0,
+`credit_in_reporting_currency` decimal(21,9) NOT NULL DEFAULT 0.0,
+`account_currency` varchar(140),
+`debit_in_account_currency` decimal(21,9) NOT NULL DEFAULT 0.0,
+`credit_in_account_currency` decimal(21,9) NOT NULL DEFAULT 0.0,
+`project` varchar(140),
+`company` varchar(140),
+`finance_book` varchar(140),
+`period_closing_voucher` varchar(140),
+`is_period_closing_voucher_entry` tinyint(4) NOT NULL DEFAULT 0,
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index `closing_date`(`closing_date`),
+index `account`(`account`),
+index `company`(`company`),
+index `period_closing_voucher`(`period_closing_voucher`),
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:54,258 WARNING database DDL Query made to DB:
+create table `tabExchange Rate Revaluation` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`posting_date` date,
+`rounding_loss_allowance` decimal(21,9) NOT NULL DEFAULT 0.05,
+`company` varchar(140),
+`gain_loss_unbooked` decimal(21,9) NOT NULL DEFAULT 0.0,
+`gain_loss_booked` decimal(21,9) NOT NULL DEFAULT 0.0,
+`total_gain_loss` decimal(21,9) NOT NULL DEFAULT 0.0,
+`amended_from` varchar(140),
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:54,318 WARNING database DDL Query made to DB:
+create table `tabPricing Rule Item Group` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`item_group` varchar(140),
+`uom` varchar(140),
+index `item_group`(`item_group`),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:54,382 WARNING database DDL Query made to DB:
+create table `tabPayment Ledger Entry` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`posting_date` date,
+`company` varchar(140),
+`account_type` varchar(140),
+`account` varchar(140),
+`party_type` varchar(140),
+`party` varchar(140),
+`due_date` date,
+`voucher_detail_no` varchar(140),
+`cost_center` varchar(140),
+`finance_book` varchar(140),
+`voucher_type` varchar(140),
+`voucher_no` varchar(140),
+`against_voucher_type` varchar(140),
+`against_voucher_no` varchar(140),
+`amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`account_currency` varchar(140),
+`amount_in_account_currency` decimal(21,9) NOT NULL DEFAULT 0.0,
+`delinked` tinyint(4) NOT NULL DEFAULT 0,
+`remarks` text,
+`project` varchar(140),
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index `posting_date`(`posting_date`),
+index `company`(`company`),
+index `account`(`account`),
+index `party_type`(`party_type`),
+index `party`(`party`),
+index `voucher_detail_no`(`voucher_detail_no`),
+index `voucher_type`(`voucher_type`),
+index `voucher_no`(`voucher_no`),
+index `against_voucher_type`(`against_voucher_type`),
+index `against_voucher_no`(`against_voucher_no`),
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:54,413 WARNING database DDL Query made to DB:
+ALTER TABLE `tabPayment Ledger Entry`
+				ADD INDEX IF NOT EXISTS `against_voucher_no_against_voucher_type_index`(against_voucher_no, against_voucher_type)
+2026-06-23 10:39:54,427 WARNING database DDL Query made to DB:
+ALTER TABLE `tabPayment Ledger Entry`
+				ADD INDEX IF NOT EXISTS `voucher_no_voucher_type_index`(voucher_no, voucher_type)
+2026-06-23 10:39:54,560 WARNING database DDL Query made to DB:
+create table `tabSales Invoice Item` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`barcode` varchar(140),
+`has_item_scanned` tinyint(4) NOT NULL DEFAULT 0,
+`item_code` varchar(140),
+`is_product_bundle` tinyint(4) NOT NULL DEFAULT 0,
+`product_bundle` varchar(140),
+`item_name` varchar(140),
+`customer_item_code` varchar(140),
+`description` longtext,
+`item_group` varchar(140),
+`brand` varchar(140),
+`image` text,
+`qty` decimal(21,9) NOT NULL DEFAULT 0.0,
+`stock_uom` varchar(140),
+`uom` varchar(140),
+`conversion_factor` decimal(21,9) NOT NULL DEFAULT 0.0,
+`stock_qty` decimal(21,9) NOT NULL DEFAULT 0.0,
+`price_list_rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`base_price_list_rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`margin_type` varchar(140),
+`margin_rate_or_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`rate_with_margin` decimal(21,9) NOT NULL DEFAULT 0.0,
+`discount_percentage` decimal(21,9) NOT NULL DEFAULT 0.0,
+`discount_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`distributed_discount_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`base_rate_with_margin` decimal(21,9) NOT NULL DEFAULT 0.0,
+`rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`item_tax_template` varchar(140),
+`tax_withholding_category` varchar(140),
+`base_rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`base_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`pricing_rules` text,
+`stock_uom_rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`is_free_item` tinyint(4) NOT NULL DEFAULT 0,
+`apply_tds` tinyint(4) NOT NULL DEFAULT 1,
+`grant_commission` tinyint(4) NOT NULL DEFAULT 0,
+`allow_zero_valuation_rate` tinyint(4) NOT NULL DEFAULT 0,
+`net_rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`net_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`base_net_rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`base_net_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`delivered_by_supplier` tinyint(4) NOT NULL DEFAULT 0,
+`income_account` varchar(140),
+`is_fixed_asset` tinyint(4) NOT NULL DEFAULT 0,
+`asset` varchar(140),
+`finance_book` varchar(140),
+`expense_account` varchar(140),
+`discount_account` varchar(140),
+`deferred_revenue_account` varchar(140),
+`service_stop_date` date,
+`enable_deferred_revenue` tinyint(4) NOT NULL DEFAULT 0,
+`service_start_date` date,
+`service_end_date` date,
+`weight_per_unit` decimal(21,9) NOT NULL DEFAULT 0.0,
+`total_weight` decimal(21,9) NOT NULL DEFAULT 0.0,
+`weight_uom` varchar(140),
+`warehouse` varchar(140),
+`target_warehouse` varchar(140),
+`quality_inspection` varchar(140),
+`serial_and_batch_bundle` varchar(140),
+`use_serial_batch_fields` tinyint(4) NOT NULL DEFAULT 0,
+`incoming_rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`item_tax_rate` text,
+`actual_batch_qty` decimal(21,9) NOT NULL DEFAULT 0.0,
+`serial_no` text,
+`batch_no` varchar(140),
+`actual_qty` decimal(21,9) NOT NULL DEFAULT 0.0,
+`company_total_stock` decimal(21,9) NOT NULL DEFAULT 0.0,
+`sales_order` varchar(140),
+`so_detail` varchar(140),
+`sales_invoice_item` varchar(140),
+`pick_list_item` varchar(140),
+`delivery_note` varchar(140),
+`dn_detail` varchar(140),
+`delivered_qty` decimal(21,9) NOT NULL DEFAULT 0.0,
+`pos_invoice` varchar(140),
+`pos_invoice_item` varchar(140),
+`scio_detail` varchar(140),
+`against_pick_list` varchar(140),
+`purchase_order` varchar(140),
+`purchase_order_item` varchar(140),
+`cost_center` varchar(140),
+`project` varchar(140),
+`page_break` tinyint(4) NOT NULL DEFAULT 0,
+index `item_code`(`item_code`),
+index `serial_and_batch_bundle`(`serial_and_batch_bundle`),
+index `batch_no`(`batch_no`),
+index `sales_order`(`sales_order`),
+index `so_detail`(`so_detail`),
+index `delivery_note`(`delivery_note`),
+index `dn_detail`(`dn_detail`),
+index `pos_invoice`(`pos_invoice`),
+index `purchase_order`(`purchase_order`),
+index `project`(`project`),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:54,704 WARNING database DDL Query made to DB:
+create table `tabTax Category` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`title` varchar(140) UNIQUE,
+`disabled` tinyint(4) NOT NULL DEFAULT 0,
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:54,796 WARNING database DDL Query made to DB:
+create table `tabPayment Term` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`payment_term_name` varchar(140) UNIQUE,
+`invoice_portion` decimal(21,9) NOT NULL DEFAULT 0.0,
+`mode_of_payment` varchar(140),
+`due_date_based_on` varchar(140),
+`credit_days` int(11) NOT NULL DEFAULT 0,
+`credit_months` int(11) NOT NULL DEFAULT 0,
+`discount_type` varchar(140) DEFAULT 'Percentage',
+`discount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`discount_validity_based_on` varchar(140) DEFAULT 'Day(s) after invoice date',
+`discount_validity` int(11) NOT NULL DEFAULT 0,
+`description` text,
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:54,838 WARNING database DDL Query made to DB:
+create table `tabBank Transaction Rule Description Conditions` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`check` varchar(140),
+`value` text,
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:54,887 WARNING database DDL Query made to DB:
+create table `tabRepost Accounting Ledger` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`company` varchar(140),
+`delete_cancelled_entries` tinyint(4) NOT NULL DEFAULT 0,
+`amended_from` varchar(140),
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:54,925 WARNING database DDL Query made to DB:
+create table `tabBank Clearance Detail` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`payment_document` varchar(140),
+`payment_entry` varchar(140),
+`against_account` varchar(140),
+`amount` varchar(140),
+`posting_date` date,
+`cheque_number` varchar(140),
+`cheque_date` date,
+`clearance_date` date,
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:54,975 WARNING database DDL Query made to DB:
+create table `tabBank Transaction Rule Accounts` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`account` varchar(140),
+`party_type` varchar(140),
+`party` varchar(140),
+`debit` varchar(140),
+`credit` varchar(140),
+`user_remark` text,
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:55,020 WARNING database DDL Query made to DB:
+create table `tabAccounting Period` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`period_name` varchar(140) UNIQUE,
+`start_date` date,
+`end_date` date,
+`company` varchar(140),
+`disabled` tinyint(4) NOT NULL DEFAULT 0,
+`exempted_role` varchar(140),
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:55,057 WARNING database DDL Query made to DB:
+create table `tabTerritory Item` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`territory` varchar(140),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:55,104 WARNING database DDL Query made to DB:
+create table `tabCashier Closing` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`naming_series` varchar(140) DEFAULT 'POS-CLO-',
+`user` varchar(140),
+`date` date,
+`from_time` time(6),
+`time` time(6),
+`expense` decimal(21,9) NOT NULL DEFAULT 0.0,
+`custody` decimal(21,9) NOT NULL DEFAULT 0.0,
+`returns` decimal(21,2) NOT NULL DEFAULT 0.0,
+`outstanding_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`net_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`amended_from` varchar(140),
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:55,150 WARNING database DDL Query made to DB:
+create sequence if not exists bisect_nodes_id_seq nocache nocycle
+2026-06-23 10:39:55,161 WARNING database DDL Query made to DB:
+create table `tabBisect Nodes` (
+			name bigint primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`root` varchar(140),
+`left_child` varchar(140),
+`right_child` varchar(140),
+`period_from_date` datetime(6),
+`period_to_date` datetime(6),
+`difference` decimal(21,9) NOT NULL DEFAULT 0.0,
+`balance_sheet_summary` decimal(21,9) NOT NULL DEFAULT 0.0,
+`profit_loss_summary` decimal(21,9) NOT NULL DEFAULT 0.0,
+`generated` tinyint(4) NOT NULL DEFAULT 0,
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:55,195 WARNING database DDL Query made to DB:
+create table `tabProcess Period Closing Voucher Detail` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`processing_date` date,
+`report_type` varchar(140) DEFAULT 'Profit and Loss',
+`status` varchar(140) DEFAULT 'Queued',
+`closing_balance` json,
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:55,234 WARNING database DDL Query made to DB:
+create table `tabPOS Customer Group` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`customer_group` varchar(140),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:55,274 WARNING database DDL Query made to DB:
+create table `tabApplicable On Account` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`applicable_on_account` varchar(140),
+`is_mandatory` tinyint(4) NOT NULL DEFAULT 0,
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:55,310 WARNING database DDL Query made to DB:
+create table `tabCost Center Allocation Percentage` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`cost_center` varchar(140),
+`percentage` decimal(21,9) NOT NULL DEFAULT 0.0,
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:55,408 WARNING database DDL Query made to DB:
+create table `tabSubscription Plan` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`plan_name` varchar(140) UNIQUE,
+`currency` varchar(140),
+`item` varchar(140),
+`price_determination` varchar(140),
+`cost` decimal(21,9) NOT NULL DEFAULT 0.0,
+`price_list` varchar(140),
+`billing_interval` varchar(140) DEFAULT 'Day',
+`billing_interval_count` int(11) NOT NULL DEFAULT 1,
+`product_price_id` varchar(140),
+`payment_gateway` varchar(140),
+`cost_center` varchar(140),
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:55,476 WARNING database DDL Query made to DB:
+create table `tabPayment Terms Template` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`template_name` varchar(140) UNIQUE,
+`allocate_payment_based_on_payment_terms` tinyint(4) NOT NULL DEFAULT 0,
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:55,518 WARNING database DDL Query made to DB:
+create table `tabAllowed To Transact With` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`company` varchar(140),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:55,637 WARNING database DDL Query made to DB:
+create table `tabJournal Entry` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`company` varchar(140),
+`voucher_type` varchar(140) DEFAULT 'Journal Entry',
+`naming_series` varchar(140),
+`posting_date` date,
+`multi_currency` tinyint(4) NOT NULL DEFAULT 0,
+`apply_tds` tinyint(4) NOT NULL DEFAULT 0,
+`tax_withholding_category` varchar(140),
+`is_system_generated` tinyint(4) NOT NULL DEFAULT 0,
+`amended_from` varchar(140),
+`for_all_stock_asset_accounts` tinyint(4) NOT NULL DEFAULT 1,
+`stock_asset_account` varchar(140),
+`periodic_entry_difference_account` varchar(140),
+`total_debit` decimal(21,9) NOT NULL DEFAULT 0.0,
+`total_credit` decimal(21,9) NOT NULL DEFAULT 0.0,
+`difference` decimal(21,9) NOT NULL DEFAULT 0.0,
+`cheque_no` varchar(140),
+`cheque_date` date,
+`clearance_date` date,
+`user_remark` text,
+`auto_repeat` varchar(140),
+`tax_withholding_group` varchar(140),
+`ignore_tax_withholding_threshold` tinyint(4) NOT NULL DEFAULT 0,
+`override_tax_withholding_entries` tinyint(4) NOT NULL DEFAULT 0,
+`bill_no` varchar(140),
+`bill_date` date,
+`due_date` date,
+`inter_company_journal_entry_reference` varchar(140),
+`process_deferred_accounting` varchar(140),
+`reversal_of` varchar(140),
+`payment_order` varchar(140),
+`stock_entry` varchar(140),
+`pay_to_recd_from` varchar(140),
+`letter_head` varchar(140),
+`select_print_heading` varchar(140),
+`total_amount_currency` varchar(140),
+`total_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`total_amount_in_words` varchar(140),
+`write_off_based_on` varchar(140) DEFAULT 'Accounts Receivable',
+`write_off_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`is_opening` varchar(140) DEFAULT 'No',
+`finance_book` varchar(140),
+`from_template` varchar(140),
+`title` varchar(140),
+`custom_remark` tinyint(4) NOT NULL DEFAULT 0,
+`remark` text,
+`mode_of_payment` varchar(140),
+`party_not_required` tinyint(4) NOT NULL DEFAULT 0,
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index `company`(`company`),
+index `voucher_type`(`voucher_type`),
+index `posting_date`(`posting_date`),
+index `cheque_no`(`cheque_no`),
+index `cheque_date`(`cheque_date`),
+index `clearance_date`(`clearance_date`),
+index `is_opening`(`is_opening`),
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:55,730 WARNING database DDL Query made to DB:
+create table `tabDunning` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`naming_series` varchar(140) DEFAULT 'DUNN-.MM.-.YY.-',
+`customer` varchar(140),
+`customer_name` varchar(140),
+`company` varchar(140),
+`posting_date` date,
+`posting_time` time(6),
+`status` varchar(140) DEFAULT 'Unresolved',
+`currency` varchar(140),
+`conversion_rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`dunning_type` varchar(140),
+`rate_of_interest` decimal(21,9) NOT NULL DEFAULT 0.0,
+`total_interest` decimal(21,2) NOT NULL DEFAULT 0.0,
+`dunning_fee` decimal(21,2) NOT NULL DEFAULT 0.0,
+`dunning_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`base_dunning_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`spacer` varchar(140),
+`total_outstanding` decimal(21,9) NOT NULL DEFAULT 0.0,
+`grand_total` decimal(21,2) NOT NULL DEFAULT 0.0,
+`language` varchar(140),
+`body_text` longtext,
+`letter_head` varchar(140),
+`closing_text` longtext,
+`income_account` varchar(140),
+`cost_center` varchar(140),
+`amended_from` varchar(140),
+`customer_address` varchar(140),
+`address_display` longtext,
+`contact_person` varchar(140),
+`contact_display` text,
+`contact_mobile` text,
+`contact_email` varchar(140),
+`company_address` varchar(140),
+`company_address_display` longtext,
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:55,773 WARNING database DDL Query made to DB:
+create table `tabLedger Merge Accounts` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`account` varchar(140),
+`account_name` varchar(140),
+`merged` tinyint(4) NOT NULL DEFAULT 0,
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:55,823 WARNING database DDL Query made to DB:
+create table `tabProcess Payment Reconciliation Log Allocations` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`reference_type` varchar(140),
+`reference_name` varchar(140),
+`reference_row` varchar(140),
+`invoice_type` varchar(140),
+`invoice_number` varchar(140),
+`allocated_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`unreconciled_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`is_advance` varchar(140),
+`difference_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`gain_loss_posting_date` date,
+`difference_account` varchar(140),
+`exchange_rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`currency` varchar(140),
+`reconciled` tinyint(4) NOT NULL DEFAULT 0,
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:55,934 WARNING database DDL Query made to DB:
+create table `tabProcess Statement Of Accounts` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`report` varchar(140),
+`from_date` date,
+`posting_date` date,
+`company` varchar(140),
+`account` varchar(140),
+`categorize_by` varchar(140) DEFAULT 'Categorize by Voucher (Consolidated)',
+`territory` varchar(140),
+`show_opening_entries` tinyint(4) NOT NULL DEFAULT 0,
+`ignore_exchange_rate_revaluation_journals` tinyint(4) NOT NULL DEFAULT 0,
+`ignore_cr_dr_notes` tinyint(4) NOT NULL DEFAULT 0,
+`to_date` date,
+`finance_book` varchar(140),
+`currency` varchar(140),
+`payment_terms_template` varchar(140),
+`sales_partner` varchar(140),
+`sales_person` varchar(140),
+`show_remarks` tinyint(4) NOT NULL DEFAULT 0,
+`based_on_payment_terms` tinyint(4) NOT NULL DEFAULT 0,
+`show_future_payments` tinyint(4) NOT NULL DEFAULT 0,
+`customer_collection` varchar(140),
+`collection_name` varchar(140),
+`primary_mandatory` tinyint(4) NOT NULL DEFAULT 1,
+`show_net_values_in_party_account` tinyint(4) NOT NULL DEFAULT 0,
+`print_format` varchar(140),
+`orientation` varchar(140),
+`include_break` tinyint(4) NOT NULL DEFAULT 1,
+`include_ageing` tinyint(4) NOT NULL DEFAULT 0,
+`ageing_based_on` varchar(140) DEFAULT 'Due Date',
+`letter_head` varchar(140),
+`terms_and_conditions` varchar(140),
+`enable_auto_email` tinyint(4) NOT NULL DEFAULT 0,
+`sender` varchar(140),
+`frequency` varchar(140),
+`filter_duration` int(11) NOT NULL DEFAULT 1,
+`start_date` date,
+`pdf_name` varchar(140),
+`subject` varchar(140),
+`body` longtext,
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:56,029 WARNING database DDL Query made to DB:
+create table `tabSales Invoice Timesheet` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`activity_type` varchar(140),
+`description` text,
+`from_time` datetime(6),
+`to_time` datetime(6),
+`billing_hours` decimal(21,9) NOT NULL DEFAULT 0.0,
+`billing_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`time_sheet` varchar(140),
+`timesheet_detail` varchar(140),
+`project_name` varchar(140),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:56,071 WARNING database DDL Query made to DB:
+create table `tabUnreconcile Payment Entries` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`account` varchar(140),
+`party_type` varchar(140),
+`party` varchar(140),
+`reference_doctype` varchar(140),
+`reference_name` varchar(140),
+`allocated_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`account_currency` varchar(140),
+`unlinked` tinyint(4) NOT NULL DEFAULT 0,
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:56,108 WARNING database DDL Query made to DB:
+create table `tabPOS Payment Method` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`default` tinyint(4) NOT NULL DEFAULT 0,
+`allow_in_returns` tinyint(4) NOT NULL DEFAULT 0,
+`mode_of_payment` varchar(140),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:56,168 WARNING database DDL Query made to DB:
+create table `tabPayment Order Reference` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`reference_doctype` varchar(140),
+`reference_name` varchar(140),
+`amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`supplier` varchar(140),
+`payment_request` varchar(140),
+`mode_of_payment` varchar(140),
+`bank_account` varchar(140),
+`account` varchar(140),
+`payment_reference` varchar(140),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:56,225 WARNING database DDL Query made to DB:
+create table `tabSales Taxes and Charges` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`charge_type` varchar(140),
+`row_id` varchar(140),
+`account_head` varchar(140),
+`description` text,
+`included_in_print_rate` tinyint(4) NOT NULL DEFAULT 0,
+`included_in_paid_amount` tinyint(4) NOT NULL DEFAULT 0,
+`set_by_item_tax_template` tinyint(4) NOT NULL DEFAULT 0,
+`is_tax_withholding_account` tinyint(4) NOT NULL DEFAULT 0,
+`cost_center` varchar(140),
+`project` varchar(140),
+`rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`account_currency` varchar(140),
+`net_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`tax_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`total` decimal(21,9) NOT NULL DEFAULT 0.0,
+`tax_amount_after_discount_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`base_net_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`base_tax_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`base_total` decimal(21,9) NOT NULL DEFAULT 0.0,
+`base_tax_amount_after_discount_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`dont_recompute_tax` tinyint(4) NOT NULL DEFAULT 0,
+index `account_head`(`account_head`),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:56,265 WARNING database DDL Query made to DB:
+create table `tabBank Transaction Payments` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`payment_document` varchar(140),
+`payment_entry` varchar(140),
+`allocated_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`clearance_date` date,
+`reconciliation_type` varchar(140) DEFAULT 'Matched',
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:56,405 WARNING database DDL Query made to DB:
+create table `tabFinancial Report Template` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`template_name` varchar(140) UNIQUE,
+`report_type` varchar(140),
+`module` varchar(140),
+`disabled` tinyint(4) NOT NULL DEFAULT 0,
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:56,469 WARNING database DDL Query made to DB:
+create table `tabAdvance Payment Ledger Entry` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`company` varchar(140),
+`voucher_type` varchar(140),
+`voucher_no` varchar(140),
+`against_voucher_type` varchar(140),
+`against_voucher_no` varchar(140),
+`currency` varchar(140),
+`exchange_rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`base_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`event` varchar(140),
+`delinked` tinyint(4) NOT NULL DEFAULT 0,
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:56,504 WARNING database DDL Query made to DB:
+ALTER TABLE `tabAdvance Payment Ledger Entry`
+				ADD INDEX IF NOT EXISTS `against_voucher_type_against_voucher_no_index`(against_voucher_type, against_voucher_no)
+2026-06-23 10:39:56,516 WARNING database DDL Query made to DB:
+ALTER TABLE `tabAdvance Payment Ledger Entry`
+				ADD INDEX IF NOT EXISTS `voucher_type_voucher_no_index`(voucher_type, voucher_no)
+2026-06-23 10:39:56,541 WARNING database DDL Query made to DB:
+create table `tabAllowed Dimension` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`accounting_dimension` varchar(140),
+`dimension_value` varchar(140),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:56,631 WARNING database DDL Query made to DB:
+create table `tabGL Entry` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`posting_date` date,
+`transaction_date` date,
+`fiscal_year` varchar(140),
+`due_date` date,
+`account` varchar(140),
+`account_currency` varchar(140),
+`against` text,
+`party_type` varchar(140),
+`party` varchar(140),
+`voucher_type` varchar(140),
+`voucher_no` varchar(140),
+`voucher_subtype` text,
+`transaction_currency` varchar(140),
+`against_voucher_type` varchar(140),
+`against_voucher` varchar(140),
+`voucher_detail_no` varchar(140),
+`transaction_exchange_rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`reporting_currency_exchange_rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`debit_in_account_currency` decimal(21,9) NOT NULL DEFAULT 0.0,
+`debit` decimal(21,9) NOT NULL DEFAULT 0.0,
+`debit_in_transaction_currency` decimal(21,9) NOT NULL DEFAULT 0.0,
+`debit_in_reporting_currency` decimal(21,9) NOT NULL DEFAULT 0.0,
+`credit_in_account_currency` decimal(21,9) NOT NULL DEFAULT 0.0,
+`credit` decimal(21,9) NOT NULL DEFAULT 0.0,
+`credit_in_transaction_currency` decimal(21,9) NOT NULL DEFAULT 0.0,
+`credit_in_reporting_currency` decimal(21,9) NOT NULL DEFAULT 0.0,
+`cost_center` varchar(140),
+`project` varchar(140),
+`finance_book` varchar(140),
+`company` varchar(140),
+`is_opening` varchar(140),
+`is_advance` varchar(140),
+`to_rename` tinyint(4) NOT NULL DEFAULT 1,
+`is_cancelled` tinyint(4) NOT NULL DEFAULT 0,
+`remarks` text,
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index `posting_date`(`posting_date`),
+index `account`(`account`),
+index `party_type`(`party_type`),
+index `party`(`party`),
+index `voucher_no`(`voucher_no`),
+index `against_voucher`(`against_voucher`),
+index `voucher_detail_no`(`voucher_detail_no`),
+index `cost_center`(`cost_center`),
+index `company`(`company`),
+index `to_rename`(`to_rename`),
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:56,656 WARNING database DDL Query made to DB:
+ALTER TABLE `tabGL Entry`
+				ADD INDEX IF NOT EXISTS `voucher_type_voucher_no_index`(voucher_type, voucher_no)
+2026-06-23 10:39:56,667 WARNING database DDL Query made to DB:
+ALTER TABLE `tabGL Entry`
+				ADD INDEX IF NOT EXISTS `posting_date_company_index`(posting_date, company)
+2026-06-23 10:39:56,681 WARNING database DDL Query made to DB:
+ALTER TABLE `tabGL Entry`
+				ADD INDEX IF NOT EXISTS `party_type_party_index`(party_type, party)
+2026-06-23 10:39:56,715 WARNING database DDL Query made to DB:
+create table `tabSouth Africa VAT Account` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`account` varchar(140),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:56,791 WARNING database DDL Query made to DB:
+create table `tabBank Statement Import Log Column Map` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`header_text` varchar(140),
+`index` int(11) NOT NULL DEFAULT 0,
+`maps_to` varchar(140),
+`variable` varchar(140),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:56,882 WARNING database DDL Query made to DB:
+create table `tabTax Withholding Entry` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`company` varchar(140),
+`party_type` varchar(140),
+`party` varchar(140),
+`tax_id` varchar(140),
+`tax_withholding_category` varchar(140),
+`tax_withholding_group` varchar(140),
+`taxable_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`tax_rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`withholding_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`taxable_doctype` varchar(140),
+`taxable_name` varchar(140),
+`taxable_date` date,
+`currency` varchar(140),
+`conversion_rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`under_withheld_reason` varchar(140),
+`lower_deduction_certificate` varchar(140),
+`withholding_doctype` varchar(140),
+`withholding_name` varchar(140),
+`withholding_date` date,
+`status` varchar(140),
+`created_by_migration` tinyint(4) NOT NULL DEFAULT 0,
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:56,978 WARNING database DDL Query made to DB:
+create table `tabPricing Rule Brand` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`brand` varchar(140),
+`uom` varchar(140),
+index `brand`(`brand`),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:57,060 WARNING database DDL Query made to DB:
+create table `tabPOS Closing Entry` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`period_start_date` datetime(6),
+`period_end_date` datetime(6),
+`posting_date` date,
+`posting_time` time(6),
+`pos_opening_entry` varchar(140),
+`status` varchar(140) DEFAULT 'Draft',
+`company` varchar(140),
+`pos_profile` varchar(140),
+`user` varchar(140),
+`total_quantity` decimal(21,9) NOT NULL DEFAULT 0.0,
+`net_total` decimal(21,9) NOT NULL DEFAULT 0.0,
+`total_taxes_and_charges` decimal(21,9) NOT NULL DEFAULT 0.0,
+`grand_total` decimal(21,9) NOT NULL DEFAULT 0.0,
+`error_message` text,
+`amended_from` varchar(140),
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:57,183 WARNING database DDL Query made to DB:
+create table `tabPricing Rule` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`naming_series` varchar(140) DEFAULT 'PRLE-.####',
+`title` varchar(140),
+`disable` tinyint(4) NOT NULL DEFAULT 0,
+`apply_on` varchar(140) DEFAULT 'Item Code',
+`price_or_product_discount` varchar(140),
+`warehouse` varchar(140),
+`mixed_conditions` tinyint(4) NOT NULL DEFAULT 0,
+`is_cumulative` tinyint(4) NOT NULL DEFAULT 0,
+`coupon_code_based` tinyint(4) NOT NULL DEFAULT 0,
+`apply_rule_on_other` varchar(140),
+`other_item_code` varchar(140),
+`other_item_group` varchar(140),
+`other_brand` varchar(140),
+`selling` tinyint(4) NOT NULL DEFAULT 0,
+`buying` tinyint(4) NOT NULL DEFAULT 0,
+`applicable_for` varchar(140),
+`customer` varchar(140),
+`customer_group` varchar(140),
+`territory` varchar(140),
+`sales_partner` varchar(140),
+`campaign` varchar(140),
+`supplier` varchar(140),
+`supplier_group` varchar(140),
+`min_qty` decimal(21,9) NOT NULL DEFAULT 0.0,
+`max_qty` decimal(21,9) NOT NULL DEFAULT 0.0,
+`min_amt` decimal(21,9) NOT NULL DEFAULT 0.0,
+`max_amt` decimal(21,9) NOT NULL DEFAULT 0.0,
+`same_item` tinyint(4) NOT NULL DEFAULT 0,
+`free_item` varchar(140),
+`free_qty` decimal(21,9) NOT NULL DEFAULT 0.0,
+`free_item_rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`free_item_uom` varchar(140),
+`round_free_qty` tinyint(4) NOT NULL DEFAULT 0,
+`dont_enforce_free_item_qty` tinyint(4) NOT NULL DEFAULT 0,
+`is_recursive` tinyint(4) NOT NULL DEFAULT 0,
+`recurse_for` decimal(21,9) NOT NULL DEFAULT 0.0,
+`apply_recursion_over` decimal(21,9) NOT NULL DEFAULT 0.0,
+`valid_from` date,
+`valid_upto` date,
+`company` varchar(140),
+`currency` varchar(140),
+`margin_type` varchar(140) DEFAULT 'Percentage',
+`margin_rate_or_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`rate_or_discount` varchar(140) DEFAULT 'Discount Percentage',
+`apply_discount_on` varchar(140) DEFAULT 'Grand Total',
+`rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`discount_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`discount_percentage` decimal(21,9) NOT NULL DEFAULT 0.0,
+`for_price_list` varchar(140),
+`condition` longtext,
+`apply_multiple_pricing_rules` tinyint(4) NOT NULL DEFAULT 0,
+`apply_discount_on_rate` tinyint(4) NOT NULL DEFAULT 0,
+`threshold_percentage` decimal(21,9) NOT NULL DEFAULT 0.0,
+`validate_applied_rule` tinyint(4) NOT NULL DEFAULT 0,
+`rule_description` text,
+`has_priority` tinyint(4) NOT NULL DEFAULT 0,
+`priority` varchar(140),
+`promotional_scheme_id` varchar(140),
+`promotional_scheme` varchar(140),
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index `warehouse`(`warehouse`),
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:57,245 WARNING database DDL Query made to DB:
+create table `tabBank Statement Import` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`company` varchar(140),
+`bank_account` varchar(140),
+`bank` varchar(140),
+`import_mt940_fromat` tinyint(4) NOT NULL DEFAULT 0,
+`custom_delimiters` tinyint(4) NOT NULL DEFAULT 0,
+`delimiter_options` varchar(140) DEFAULT ',;\\t|',
+`google_sheets_url` varchar(140),
+`import_file` text,
+`status` varchar(140) DEFAULT 'Pending',
+`template_options` longtext,
+`use_csv_sniffer` tinyint(4) NOT NULL DEFAULT 0,
+`template_warnings` longtext,
+`show_failed_logs` tinyint(4) NOT NULL DEFAULT 0,
+`reference_doctype` varchar(140) DEFAULT 'Bank Transaction',
+`import_type` varchar(140) DEFAULT 'Insert New Records',
+`submit_after_import` tinyint(4) NOT NULL DEFAULT 1,
+`mute_emails` tinyint(4) NOT NULL DEFAULT 1,
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:57,335 WARNING database DDL Query made to DB:
+create table `tabProcess Subscription` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`posting_date` date,
+`subscription` varchar(140),
+`amended_from` varchar(140),
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:57,379 WARNING database DDL Query made to DB:
+create table `tabPOS Closing Entry Detail` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`mode_of_payment` varchar(140),
+`opening_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`expected_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`closing_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`difference` decimal(21,9) NOT NULL DEFAULT 0.0,
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:57,418 WARNING database DDL Query made to DB:
+create table `tabBudget Account` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`account` varchar(140),
+`budget_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+index `account`(`account`),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:57,466 WARNING database DDL Query made to DB:
+create table `tabPayment Order` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`naming_series` varchar(140) DEFAULT 'PMO-',
+`company` varchar(140),
+`payment_order_type` varchar(140),
+`party` varchar(140),
+`posting_date` date,
+`company_bank` varchar(140),
+`company_bank_account` varchar(140),
+`account` varchar(140),
+`amended_from` varchar(140),
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:58,497 WARNING database DDL Query made to DB:
+create table `tabMarket Segment` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`market_segment` varchar(140) UNIQUE,
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:58,739 WARNING database DDL Query made to DB:
+create table `tabOpportunity` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`naming_series` varchar(140),
+`opportunity_from` varchar(140),
+`party_name` varchar(140),
+`customer_name` varchar(140),
+`status` varchar(140) DEFAULT 'Open',
+`opportunity_type` varchar(140),
+`opportunity_owner` varchar(140),
+`sales_stage` varchar(140) DEFAULT 'Prospecting',
+`expected_closing` date,
+`probability` decimal(21,9) NOT NULL DEFAULT 100.0,
+`no_of_employees` varchar(140),
+`annual_revenue` decimal(21,9) NOT NULL DEFAULT 0.0,
+`customer_group` varchar(140),
+`industry` varchar(140),
+`market_segment` varchar(140),
+`website` varchar(140),
+`city` varchar(140),
+`state` varchar(140),
+`country` varchar(140),
+`territory` varchar(140),
+`currency` varchar(140),
+`conversion_rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`opportunity_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`base_opportunity_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`utm_source` varchar(140),
+`utm_medium` varchar(140),
+`utm_campaign` varchar(140),
+`utm_content` varchar(140),
+`company` varchar(140),
+`transaction_date` date,
+`language` varchar(140),
+`amended_from` varchar(140),
+`title` varchar(140),
+`first_response_time` decimal(21,9),
+`order_lost_reason` text,
+`contact_person` varchar(140),
+`job_title` varchar(140),
+`contact_email` varchar(140),
+`contact_mobile` varchar(140),
+`whatsapp` varchar(140),
+`phone` varchar(140),
+`phone_ext` varchar(140),
+`customer_address` varchar(140),
+`address_display` longtext,
+`contact_display` text,
+`base_total` decimal(21,9) NOT NULL DEFAULT 0.0,
+`total` decimal(21,9) NOT NULL DEFAULT 0.0,
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+`_seen` text,
+index `customer_group`(`customer_group`),
+index `territory`(`territory`),
+index `company`(`company`),
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:58,795 WARNING database DDL Query made to DB:
+create table `tabOpportunity Item` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`item_code` varchar(140),
+`item_name` varchar(140),
+`uom` varchar(140),
+`qty` decimal(21,9) NOT NULL DEFAULT 1.0,
+`brand` varchar(140),
+`item_group` varchar(140),
+`description` longtext,
+`image` text,
+`base_rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`base_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:58,857 WARNING database DDL Query made to DB:
+create table `tabContract` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`party_type` varchar(140) DEFAULT 'Customer',
+`is_signed` tinyint(4) NOT NULL DEFAULT 0,
+`party_name` varchar(140),
+`party_user` varchar(140),
+`status` varchar(140),
+`fulfilment_status` varchar(140),
+`party_full_name` varchar(140),
+`start_date` date,
+`end_date` date,
+`signee` varchar(140),
+`signed_on` datetime(6),
+`ip_address` varchar(140),
+`contract_template` varchar(140),
+`contract_terms` longtext,
+`requires_fulfilment` tinyint(4) NOT NULL DEFAULT 0,
+`fulfilment_deadline` date,
+`signee_company` longtext,
+`signed_by_company` varchar(140),
+`document_type` varchar(140),
+`document_name` varchar(140),
+`amended_from` varchar(140),
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+`_seen` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:58,934 WARNING database DDL Query made to DB:
+create table `tabCampaign` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`campaign_name` varchar(140),
+`naming_series` varchar(140),
+`description` text,
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:59,046 WARNING database DDL Query made to DB:
+create sequence if not exists prospect_opportunity_id_seq nocache nocycle
+2026-06-23 10:39:59,055 WARNING database DDL Query made to DB:
+create table `tabProspect Opportunity` (
+			name bigint primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`opportunity` varchar(140),
+`amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`stage` varchar(140),
+`deal_owner` varchar(140),
+`probability` decimal(21,9) NOT NULL DEFAULT 0.0,
+`expected_closing` date,
+`currency` varchar(140),
+`contact_person` varchar(140),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:59,111 WARNING database DDL Query made to DB:
+create table `tabEmail Campaign` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`campaign_name` varchar(140),
+`email_campaign_for` varchar(140) DEFAULT 'Lead',
+`recipient` varchar(140),
+`sender` varchar(140),
+`start_date` date,
+`end_date` date,
+`status` varchar(140),
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:59,271 WARNING database DDL Query made to DB:
+create table `tabCompetitor Detail` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`competitor` varchar(140),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:59,318 WARNING database DDL Query made to DB:
+create table `tabAvailability Of Slots` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`day_of_week` varchar(140),
+`from_time` time(6),
+`to_time` time(6),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:59,384 WARNING database DDL Query made to DB:
+create table `tabLost Reason Detail` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`lost_reason` varchar(140),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:59,417 WARNING database DDL Query made to DB:
+create table `tabContract Template Fulfilment Terms` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`requirement` varchar(140),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:59,472 WARNING database DDL Query made to DB:
+create table `tabAppointment` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`scheduled_time` datetime(6),
+`status` varchar(140),
+`customer_name` varchar(140),
+`customer_phone_number` varchar(140),
+`customer_skype` varchar(140),
+`customer_email` varchar(140),
+`customer_details` longtext,
+`appointment_with` varchar(140),
+`party` varchar(140),
+`calendar_event` varchar(140),
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:59,522 WARNING database DDL Query made to DB:
+create table `tabSales Stage` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`stage_name` varchar(140) UNIQUE,
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:59,560 WARNING database DDL Query made to DB:
+create table `tabOpportunity Lost Reason` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`lost_reason` varchar(140) UNIQUE,
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:59,606 WARNING database DDL Query made to DB:
+create table `tabProspect Lead` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`lead` varchar(140),
+`lead_name` varchar(140),
+`email` varchar(140),
+`mobile_no` varchar(140),
+`lead_owner` varchar(140),
+`status` varchar(140),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:59,638 WARNING database DDL Query made to DB:
+create sequence if not exists crm_note_id_seq nocache nocycle
+2026-06-23 10:39:59,649 WARNING database DDL Query made to DB:
+create table `tabCRM Note` (
+			name bigint primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`note` longtext,
+`added_by` varchar(140),
+`added_on` datetime(6),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:59,689 WARNING database DDL Query made to DB:
+create table `tabOpportunity Lost Reason Detail` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`lost_reason` varchar(140),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:59,752 WARNING database DDL Query made to DB:
+create table `tabCompetitor` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`competitor_name` varchar(140) UNIQUE,
+`website` varchar(140),
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:59,795 WARNING database DDL Query made to DB:
+create table `tabOpportunity Type` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`description` text,
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:59,843 WARNING database DDL Query made to DB:
+create table `tabContract Fulfilment Checklist` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`fulfilled` tinyint(4) NOT NULL DEFAULT 0,
+`requirement` varchar(140),
+`notes` text,
+`amended_from` varchar(140),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:59,883 WARNING database DDL Query made to DB:
+create table `tabAppointment Booking Slots` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`day_of_week` varchar(140),
+`from_time` time(6),
+`to_time` time(6),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:59,938 WARNING database DDL Query made to DB:
+create table `tabProspect` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`company_name` varchar(140) UNIQUE,
+`customer_group` varchar(140),
+`no_of_employees` varchar(140),
+`annual_revenue` decimal(21,9) NOT NULL DEFAULT 0.0,
+`market_segment` varchar(140),
+`industry` varchar(140),
+`territory` varchar(140),
+`prospect_owner` varchar(140),
+`website` varchar(140),
+`fax` varchar(140),
+`company` varchar(140),
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:39:59,983 WARNING database DDL Query made to DB:
+create table `tabCampaign Email Schedule` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`email_template` varchar(140),
+`send_after_days` int(11) NOT NULL DEFAULT 0,
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:40:00,023 WARNING database DDL Query made to DB:
+create table `tabContract Template` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`title` varchar(140) UNIQUE,
+`contract_terms` longtext,
+`requires_fulfilment` tinyint(4) NOT NULL DEFAULT 0,
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:40:00,133 WARNING database DDL Query made to DB:
+create table `tabLead` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`naming_series` varchar(140),
+`salutation` varchar(140),
+`first_name` varchar(140),
+`middle_name` varchar(140),
+`last_name` varchar(140),
+`lead_name` varchar(140),
+`job_title` varchar(140),
+`gender` varchar(140),
+`lead_owner` varchar(140),
+`status` varchar(140) DEFAULT 'Lead',
+`customer` varchar(140),
+`type` varchar(140),
+`request_type` varchar(140),
+`email_id` varchar(140),
+`website` varchar(140),
+`mobile_no` varchar(140),
+`whatsapp_no` varchar(140),
+`phone` varchar(140),
+`phone_ext` varchar(140),
+`company_name` varchar(140),
+`no_of_employees` varchar(140),
+`annual_revenue` decimal(21,9) NOT NULL DEFAULT 0.0,
+`industry` varchar(140),
+`market_segment` varchar(140),
+`territory` varchar(140),
+`fax` varchar(140),
+`city` varchar(140),
+`state` varchar(140),
+`country` varchar(140),
+`utm_source` varchar(140),
+`utm_medium` varchar(140),
+`utm_campaign` varchar(140),
+`utm_content` varchar(140),
+`qualification_status` varchar(140),
+`qualified_by` varchar(140),
+`qualified_on` date,
+`company` varchar(140),
+`language` varchar(140),
+`image` text,
+`title` varchar(140),
+`disabled` tinyint(4) NOT NULL DEFAULT 0,
+`unsubscribed` tinyint(4) NOT NULL DEFAULT 0,
+`blog_subscriber` tinyint(4) NOT NULL DEFAULT 0,
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index `lead_name`(`lead_name`),
+index `lead_owner`(`lead_owner`),
+index `status`(`status`),
+index `email_id`(`email_id`),
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:40:00,366 WARNING database DDL Query made to DB:
+create table `tabPurchase Receipt Item Supplied` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`main_item_code` varchar(140),
+`rm_item_code` varchar(140),
+`item_name` varchar(140),
+`bom_detail_no` varchar(140),
+`description` longtext,
+`stock_uom` varchar(140),
+`conversion_factor` decimal(21,9) NOT NULL DEFAULT 0.0,
+`reference_name` varchar(140),
+`rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`required_qty` decimal(21,9) NOT NULL DEFAULT 0.0,
+`consumed_qty` decimal(21,9) NOT NULL DEFAULT 0.0,
+`current_stock` decimal(21,9) NOT NULL DEFAULT 0.0,
+`batch_no` varchar(140),
+`serial_no` text,
+`purchase_order` varchar(140),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:40:00,465 WARNING database DDL Query made to DB:
+create table `tabRequest for Quotation` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`naming_series` varchar(140),
+`company` varchar(140),
+`vendor` varchar(140),
+`transaction_date` date,
+`schedule_date` date,
+`status` varchar(140),
+`has_unit_price_items` tinyint(4) NOT NULL DEFAULT 0,
+`amended_from` varchar(140),
+`email_template` varchar(140),
+`send_attached_files` tinyint(4) NOT NULL DEFAULT 1,
+`send_document_print` tinyint(4) NOT NULL DEFAULT 0,
+`subject` varchar(140) NOT NULL DEFAULT 'Request for Quotation',
+`use_html` tinyint(4) NOT NULL DEFAULT 0,
+`message_for_supplier` longtext DEFAULT 'Please supply the specified items at the best possible rates',
+`mfs_html` longtext,
+`incoterm` varchar(140),
+`named_place` varchar(140),
+`tc_name` varchar(140),
+`terms` longtext,
+`select_print_heading` varchar(140),
+`letter_head` varchar(140),
+`opportunity` varchar(140),
+`title` varchar(140),
+`billing_address` varchar(140),
+`billing_address_display` longtext,
+`shipping_address` varchar(140),
+`shipping_address_display` longtext,
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index `company`(`company`),
+index `transaction_date`(`transaction_date`),
+index `status`(`status`),
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:40:00,541 WARNING database DDL Query made to DB:
+create table `tabSupplier Scorecard` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`supplier` varchar(140) UNIQUE,
+`supplier_score` varchar(140),
+`indicator_color` varchar(140),
+`status` varchar(140),
+`period` varchar(140) DEFAULT 'Per Month',
+`weighting_function` text DEFAULT '{total_score} * max( 0, min ( 1 , (12 - {period_number}) / 12) )',
+`warn_rfqs` tinyint(4) NOT NULL DEFAULT 0,
+`warn_pos` tinyint(4) NOT NULL DEFAULT 0,
+`prevent_rfqs` tinyint(4) NOT NULL DEFAULT 0,
+`prevent_pos` tinyint(4) NOT NULL DEFAULT 0,
+`notify_supplier` tinyint(4) NOT NULL DEFAULT 0,
+`notify_employee` tinyint(4) NOT NULL DEFAULT 0,
+`employee` varchar(140),
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:40:00,683 WARNING database DDL Query made to DB:
+create table `tabPurchase Order Item` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`fg_item` varchar(140),
+`fg_item_qty` decimal(21,9) NOT NULL DEFAULT 1.0,
+`item_code` varchar(140),
+`supplier_part_no` varchar(140),
+`item_name` varchar(140),
+`brand` varchar(140),
+`product_bundle` varchar(140),
+`schedule_date` date,
+`expected_delivery_date` date,
+`item_group` varchar(140),
+`description` longtext,
+`image` text,
+`qty` decimal(21,9) NOT NULL DEFAULT 0.0,
+`stock_uom` varchar(140),
+`subcontracted_qty` decimal(21,9) NOT NULL DEFAULT 0.0,
+`uom` varchar(140),
+`conversion_factor` decimal(21,9) NOT NULL DEFAULT 0.0,
+`stock_qty` decimal(21,9) NOT NULL DEFAULT 0.0,
+`price_list_rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`last_purchase_rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`base_price_list_rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`margin_type` varchar(140),
+`margin_rate_or_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`rate_with_margin` decimal(21,9) NOT NULL DEFAULT 0.0,
+`discount_percentage` decimal(21,9) NOT NULL DEFAULT 0.0,
+`discount_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`distributed_discount_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`base_rate_with_margin` decimal(21,9) NOT NULL DEFAULT 0.0,
+`rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`item_tax_template` varchar(140),
+`base_rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`base_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`pricing_rules` text,
+`stock_uom_rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`is_free_item` tinyint(4) NOT NULL DEFAULT 0,
+`net_rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`net_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`base_net_rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`base_net_amount` decimal(21,9) NOT NULL DEFAULT 0.0,
+`from_warehouse` varchar(140),
+`warehouse` varchar(140),
+`actual_qty` decimal(21,9) NOT NULL DEFAULT 0.0,
+`company_total_stock` decimal(21,9) NOT NULL DEFAULT 0.0,
+`material_request` varchar(140),
+`material_request_item` varchar(140),
+`sales_order` varchar(140),
+`sales_order_item` varchar(140),
+`sales_order_packed_item` varchar(140),
+`supplier_quotation` varchar(140),
+`supplier_quotation_item` varchar(140),
+`delivered_by_supplier` tinyint(4) NOT NULL DEFAULT 0,
+`against_blanket_order` tinyint(4) NOT NULL DEFAULT 0,
+`blanket_order` varchar(140),
+`blanket_order_rate` decimal(21,9) NOT NULL DEFAULT 0.0,
+`received_qty` decimal(21,9) NOT NULL DEFAULT 0.0,
+`returned_qty` decimal(21,9) NOT NULL DEFAULT 0.0,
+`billed_amt` decimal(21,9) NOT NULL DEFAULT 0.0,
+`expense_account` varchar(140),
+`wip_composite_asset` varchar(140),
+`manufacturer` varchar(140),
+`manufacturer_part_no` varchar(140),
+`bom` varchar(140),
+`weight_per_unit` decimal(21,9) NOT NULL DEFAULT 0.0,
+`total_weight` decimal(21,9) NOT NULL DEFAULT 0.0,
+`weight_uom` varchar(140),
+`project` varchar(140),
+`cost_center` varchar(140),
+`is_fixed_asset` tinyint(4) NOT NULL DEFAULT 0,
+`item_tax_rate` longtext,
+`production_plan` varchar(140),
+`production_plan_item` varchar(140),
+`production_plan_sub_assembly_item` varchar(140),
+`page_break` tinyint(4) NOT NULL DEFAULT 0,
+`job_card` varchar(140),
+index `expected_delivery_date`(`expected_delivery_date`),
+index `material_request`(`material_request`),
+index `material_request_item`(`material_request_item`),
+index `sales_order`(`sales_order`),
+index `sales_order_item`(`sales_order_item`),
+index `job_card`(`job_card`),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:40:00,707 WARNING database DDL Query made to DB:
+ALTER TABLE `tabPurchase Order Item`
+				ADD INDEX IF NOT EXISTS `item_code_warehouse_index`(item_code, warehouse)
+2026-06-23 10:40:00,765 WARNING database DDL Query made to DB:
+create table `tabRequest for Quotation Item` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`item_code` varchar(140),
+`supplier_part_no` varchar(140),
+`item_name` varchar(140),
+`schedule_date` date,
+`description` longtext,
+`item_group` varchar(140),
+`brand` varchar(140),
+`image` text,
+`qty` decimal(21,9) NOT NULL DEFAULT 0.0,
+`stock_uom` varchar(140),
+`uom` varchar(140),
+`conversion_factor` decimal(21,9) NOT NULL DEFAULT 0.0,
+`stock_qty` decimal(21,9) NOT NULL DEFAULT 0.0,
+`warehouse` varchar(140),
+`material_request` varchar(140),
+`material_request_item` varchar(140),
+`cost_center` varchar(140),
+`project_name` varchar(140),
+`page_break` tinyint(4) NOT NULL DEFAULT 0,
+index `item_code`(`item_code`),
+index `item_name`(`item_name`),
+parent varchar(140),
+parentfield varchar(140),
+parenttype varchar(140),
+index parent(parent))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2026-06-23 10:40:00,884 WARNING database DDL Query made to DB:
+create table `tabSupplier` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus tinyint not null default '0',
+			idx int not null default '0',
+			`naming_series` varchar(140),
+`supplier_name` varchar(140),
+`alias` varchar(140) UNIQUE,
+`supplier_type` varchar(140) DEFAULT 'Company',
+`gender` varchar(140),
+`supplier_group` varchar(140),
+`country` varchar(140),
+`image` text,
+`default_currency` varchar(140),
+`default_bank_account` varchar(140),
+`default_price_list` varchar(140),
+`payment_terms` varchar(140),
+`supplier_primary_address` varchar(140),
+`primary_address` longtext,
+`supplier_primary_contact` varchar(140),
+`mobile_no` varchar(140),
+`email_id` varchar(140),
+`is_internal_supplier` tinyint(4) NOT NULL DEFAULT 0,
+`represents_company` varchar(140),
+`tax_id` varchar(140),
+`tax_category` varchar(140),
+`tax_withholding_category` varchar(140),
+`tax_withholding_group` varchar(140),
+`is_transporter` tinyint(4) NOT NULL DEFAULT 0,
+`allow_purchase_invoice_creation_without_purchase_order` tinyint(4) NOT NULL DEFAULT 0,
+`allow_purchase_invoice_creation_without_purchase_receipt` tinyint(4) NOT NULL DEFAULT 0,
+`disabled` tinyint(4) NOT NULL DEFAULT 0,
+`is_frozen` tinyint(4) NOT NULL DEFAULT 0,
+`on_hold` tinyint(4) NOT NULL DEFAULT 0,
+`hold_type` varchar(140) DEFAULT 'All',
+`release_date` date,
+`warn_rfqs` tinyint(4) NOT NULL DEFAULT 0,
+`prevent_rfqs` tinyint(4) NOT NULL DEFAULT 0,
+`warn_pos` tinyint(4) NOT NULL DEFAULT 0,
+`prevent_pos` tinyint(4) NOT NULL DEFAULT 0,
+`website` varchar(140),
+`language` varchar(140),
+`supplier_details` text,
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index creation(creation))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci

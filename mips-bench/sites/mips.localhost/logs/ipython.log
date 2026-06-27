@@ -1,0 +1,18 @@
+2026-06-23 11:37:01,669 INFO ipython === bench console session ===
+2026-06-23 11:37:01,670 INFO ipython === session end ===
+2026-06-24 10:04:58,597 INFO ipython === bench console session ===
+2026-06-24 10:04:58,599 INFO ipython exec(open('/workspaces/mips-erpnext/setup_mips_tripura.py').read())
+2026-06-24 10:04:58,599 INFO ipython run_all(dry_run=True) 
+2026-06-24 10:04:58,599 INFO ipython exec(open('/workspaces/mips-erpnext/setup_mips_tripura.py').read())0it(
+2026-06-24 10:04:58,599 INFO ipython === session end ===
+2026-06-24 10:10:43,982 INFO ipython === bench console session ===
+2026-06-24 10:10:43,983 INFO ipython exec(open('/workspaces/mips-erpnext/setup_mips_tripura.py').read(), globals())
+run_all(dry_run=True)
+2026-06-24 10:10:43,983 INFO ipython run_all(dry_run=False)
+2026-06-24 10:10:43,983 INFO ipython frappe.db.commit()  
+2026-06-24 10:10:43,983 INFO ipython === session end ===
+2026-06-24 10:26:52,589 INFO ipython === bench console session ===
+2026-06-24 10:26:52,589 INFO ipython exec(open('/workspaces/mips-erpnext/setup_mips_tripura.py').read(), globals())
+run_all(dry_run=True)
+2026-06-24 10:26:52,589 INFO ipython run_all(dry_run=False)
+2026-06-24 10:26:52,589 INFO ipython === session end ===

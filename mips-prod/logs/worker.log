@@ -1,0 +1,18 @@
+2026-06-24 11:12:43,787 Worker rq:worker:8d978f495c8f4377a6fa1c15bc99451c started with PID 66279, version 1.15.1
+2026-06-24 11:12:43,788 Subscribing to channel rq:pubsub:8d978f495c8f4377a6fa1c15bc99451c
+2026-06-24 11:12:43,793 *** Listening on workspaces-mips-erpnext-mips-prod:short, workspaces-mips-erpnext-mips-prod:default, workspaces-mips-erpnext-mips-prod:long...
+2026-06-24 11:12:43,797 Cleaning registries for queue: workspaces-mips-erpnext-mips-prod:short
+2026-06-24 11:12:43,808 Cleaning registries for queue: workspaces-mips-erpnext-mips-prod:default
+2026-06-24 11:12:43,820 Cleaning registries for queue: workspaces-mips-erpnext-mips-prod:long
+2026-06-24 11:14:54,021 Worker 8d978f495c8f4377a6fa1c15bc99451c [PID 66279]: warm shut down requested
+2026-06-24 11:14:54,045 Unsubscribing from channel rq:pubsub:8d978f495c8f4377a6fa1c15bc99451c
+2026-06-24 11:15:00,090 Worker rq:worker:a6bfa95441b4411f96de5bdd36f30e2b started with PID 68491, version 1.15.1
+2026-06-24 11:15:00,129 Subscribing to channel rq:pubsub:a6bfa95441b4411f96de5bdd36f30e2b
+2026-06-24 11:15:00,140 *** Listening on workspaces-mips-erpnext-mips-prod:short, workspaces-mips-erpnext-mips-prod:default, workspaces-mips-erpnext-mips-prod:long...
+2026-06-24 11:15:24,569 Worker a6bfa95441b4411f96de5bdd36f30e2b [PID 68491]: warm shut down requested
+2026-06-24 11:15:24,572 Unsubscribing from channel rq:pubsub:a6bfa95441b4411f96de5bdd36f30e2b
+2026-06-24 11:25:34,020 Worker rq:worker:64dfe5bbb1e2485cb72ccf6a0f18d957 started with PID 73785, version 1.15.1
+2026-06-24 11:25:34,020 Subscribing to channel rq:pubsub:64dfe5bbb1e2485cb72ccf6a0f18d957
+2026-06-24 11:25:34,023 *** Listening on workspaces-mips-erpnext-mips-prod:short, workspaces-mips-erpnext-mips-prod:default, workspaces-mips-erpnext-mips-prod:long...
+2026-06-24 11:26:25,513 Worker 64dfe5bbb1e2485cb72ccf6a0f18d957 [PID 73785]: warm shut down requested
+2026-06-24 11:26:25,541 Unsubscribing from channel rq:pubsub:64dfe5bbb1e2485cb72ccf6a0f18d957

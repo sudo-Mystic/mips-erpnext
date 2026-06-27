@@ -1,0 +1,122 @@
+Traceback with variables (most recent call last):
+  File "apps/frappe/frappe/desk/page/setup_wizard/setup_wizard.py", line 120, in process_setup_stages
+    task.get("fn")(task.get("args"))
+      stages = [{'status': 'Updating global settings', 'fail_msg': 'Failed to update global settings', 'tasks': [{'fn': <function update_global_settings at 0x720dadf099b0>, 'args': frappe.types.frappedict._dict{'currency': 'INR', 'country': 'India', 'timezone': 'Asia/Calcutta', 'language': 'English', 'full_name': 'Mystic', 'email': 'mystic@demo.com', 'password': 'Mys2022', 'company_name': 'MIPS Tripura', 'company_abbr': 'mips', 'chart_of_accounts': 'India - Chart of Accounts', 'fy_start_date': '2026-04-01', 'fy_end_date': '2027-03-31', 'setup_demo': 1}, 'fail_msg': 'Failed to update global settings', 'app_name': 'frappe'}]}, {'status': 'Installing presets', 'fail_msg': 'Failed to install presets', 'task...'full_name': 'Mystic', 'email': 'mystic@demo.com', 'password': 'Mys2022', 'company_name': 'MIPS Tripura', 'company_abbr': 'mips', 'chart_of_accounts': 'India - Chart of Accounts', 'fy_start_date': '2026-04-01', 'fy_end_date': '2027-03-31', 'setup_demo': 1}, 'fail_msg': 'Failed to complete setup'}]}]
+      user_input = {'currency': 'INR', 'country': 'India', 'timezone': 'Asia/Calcutta', 'language': 'English', 'full_name': 'Mystic', 'email': 'mystic@demo.com', 'password': '********', 'company_name': 'MIPS Tripura', 'company_abbr': 'mips', 'chart_of_accounts': 'India - Chart of Accounts', 'fy_start_date': '2026-04-01', 'fy_end_date': '2027-03-31', 'setup_demo': 1}
+      is_background_task = False
+      capture = <function capture at 0x720db771ec40>
+      setup_wizard_completed_apps = []
+      telemetry_enabled = False
+      current_task = {'fn': <function update_global_settings at 0x720dadf099b0>, 'args': {'currency': 'INR', 'country': 'India', 'timezone': 'Asia/Calcutta', 'language': 'English', 'full_name': 'Mystic', 'email': 'mystic@demo.com', 'password': 'Mys2022', 'company_name': 'MIPS Tripura', 'company_abbr': 'mips', 'chart_of_accounts': 'India - Chart of Accounts', 'fy_start_date': '2026-04-01', 'fy_end_date': '2027-03-31', 'setup_demo': 1}, 'fail_msg': 'Failed to update global settings', 'app_name': 'frappe'}
+      idx = 0
+      stage = {'status': 'Updating global settings', 'fail_msg': 'Failed to update global settings', 'tasks': [{'fn': <function update_global_settings at 0x720dadf099b0>, 'args': {'currency': 'INR', 'country': 'India', 'timezone': 'Asia/Calcutta', 'language': 'English', 'full_name': 'Mystic', 'email': 'mystic@demo.com', 'password': 'Mys2022', 'company_name': 'MIPS Tripura', 'company_abbr': 'mips', 'chart_of_accounts': 'India - Chart of Accounts', 'fy_start_date': '2026-04-01', 'fy_end_date': '2027-03-31', 'setup_demo': 1}, 'fail_msg': 'Failed to update global settings', 'app_name': 'frappe'}]}
+      task = {'fn': <function update_global_settings at 0x720dadf099b0>, 'args': {'currency': 'INR', 'country': 'India', 'timezone': 'Asia/Calcutta', 'language': 'English', 'full_name': 'Mystic', 'email': 'mystic@demo.com', 'password': 'Mys2022', 'company_name': 'MIPS Tripura', 'company_abbr': 'mips', 'chart_of_accounts': 'India - Chart of Accounts', 'fy_start_date': '2026-04-01', 'fy_end_date': '2027-03-31', 'setup_demo': 1}, 'fail_msg': 'Failed to update global settings', 'app_name': 'frappe'}
+  File "apps/frappe/frappe/desk/page/setup_wizard/setup_wizard.py", line 185, in update_global_settings
+    update_system_settings(args)
+      args = {'currency': 'INR', 'country': 'India', 'timezone': 'Asia/Calcutta', 'language': 'English', 'full_name': 'Mystic', 'email': 'mystic@demo.com', 'password': '********', 'company_name': 'MIPS Tripura', 'company_abbr': 'mips', 'chart_of_accounts': 'India - Chart of Accounts', 'fy_start_date': '2026-04-01', 'fy_end_date': '2027-03-31', 'setup_demo': 1}
+  File "apps/frappe/frappe/desk/page/setup_wizard/setup_wizard.py", line 297, in update_system_settings
+    system_settings.save()
+      args = {'currency': 'INR', 'country': 'India', 'timezone': 'Asia/Calcutta', 'language': 'English', 'full_name': 'Mystic', 'email': 'mystic@demo.com', 'password': '********', 'company_name': 'MIPS Tripura', 'company_abbr': 'mips', 'chart_of_accounts': 'India - Chart of Accounts', 'fy_start_date': '2026-04-01', 'fy_end_date': '2027-03-31', 'setup_demo': 1}
+      number_format = '#,##,###.##'
+      system_settings = System Settings (System Settings)
+  File "apps/frappe/frappe/model/document.py", line 787, in save
+    return self._save(*args, **kwargs)
+      self = System Settings (System Settings)
+      args = ()
+      kwargs = {}
+  File "apps/frappe/frappe/model/document.py", line 842, in _save
+    self.run_post_save_methods()
+      self = System Settings (System Settings)
+      ignore_permissions = None
+      ignore_version = None
+  File "apps/frappe/frappe/model/document.py", line 1815, in run_post_save_methods
+    self.run_method("on_update")
+      self = System Settings (System Settings)
+  File "apps/frappe/frappe/model/document.py", line 1621, in run_method
+    out = Document.hook(fn)(self, *args, **kwargs)
+      self = System Settings (System Settings)
+      method = 'on_update'
+      args = ()
+      kwargs = {}
+      fn = <function Document.run_method.<locals>.fn at 0x720daf10eb90>
+  File "apps/frappe/frappe/model/document.py", line 2022, in composer
+    return composed(self, method, *args, **kwargs)
+      self = System Settings (System Settings)
+      args = ()
+      kwargs = {}
+      hooks = [<function clear_doctype_notifications at 0x720db54f05c0>, <function process_workflow_actions at 0x720daeb24b40>, <function attach_files_to_document at 0x720db9a4fcc0>, <function apply at 0x720dae96d4e0>, <function update_due_date at 0x720dae96e2a0>, <function apply_permissions_for_non_standard_user_type at 0x720db54bfe20>, <function make_perm_log at 0x720dae96dbc0>, <function update_doc_index at 0x720daf6f6cf0>]
+      method = 'on_update'
+      doc_events = {'*': {'on_update': ['frappe.desk.notifications.clear_doctype_notifications', 'frappe.workflow.doctype.workflow_action.workflow_action.process_workflow_actions', 'frappe.core.doctype.file.utils.attach_files_to_document', 'frappe.automation.doctype.assignment_rule.assignment_rule.apply', 'frappe.automation.doctype.assignment_rule.assignment_rule.update_due_date', 'frappe.core.doctype.user_type.user_type.apply_permissions_for_non_standard_user_type', 'frappe.core.doctype.permission_log.permission_log.make_perm_log', 'frappe.search.sqlite_search.update_doc_index'], 'after_rename': ['frappe.desk.notifications.clear_doctype_notifications'], 'on_cancel': ['frappe.desk.notifications.clear_doctype_n...ess': {'validate': ['erpnext.regional.italy.utils.set_state_code']}, 'Email Unsubscribe': {'after_insert': ['erpnext.crm.doctype.email_campaign.email_campaign.unsubscribe_recipient']}, 'Integration Request': {'validate': ['erpnext.accounts.doctype.payment_request.payment_request.validate_payment']}}
+      handler = 'frappe.search.sqlite_search.update_doc_index'
+      composed = <function Document.hook.<locals>.compose.<locals>.runner at 0x720daf7454e0>
+      compose = <function Document.hook.<locals>.compose at 0x720daf6f6da0>
+      f = <function Document.run_method.<locals>.fn at 0x720daf10eb90>
+  File "apps/frappe/frappe/model/document.py", line 1996, in runner
+    add_to_return_value(self, fn(self, *args, **kwargs))
+      self = System Settings (System Settings)
+      method = 'on_update'
+      args = ()
+      kwargs = {}
+      add_to_return_value = <function Document.hook.<locals>.add_to_return_value at 0x720daec53480>
+      fn = <function Document.run_method.<locals>.fn at 0x720daf10eb90>
+      hooks = (<function clear_doctype_notifications at 0x720db54f05c0>, <function process_workflow_actions at 0x720daeb24b40>, <function attach_files_to_document at 0x720db9a4fcc0>, <function apply at 0x720dae96d4e0>, <function update_due_date at 0x720dae96e2a0>, <function apply_permissions_for_non_standard_user_type at 0x720db54bfe20>, <function make_perm_log at 0x720dae96dbc0>, <function update_doc_index at 0x720daf6f6cf0>)
+  File "apps/frappe/frappe/model/document.py", line 1618, in fn
+    return method_object(*args, **kwargs)
+      self = System Settings (System Settings)
+      args = ()
+      kwargs = {}
+      method_object = <bound method SystemSettings.on_update of <SystemSettings: doctype=System Settings System Settings>>
+      method = 'on_update'
+  File "apps/frappe/frappe/core/doctype/system_settings/system_settings.py", line 206, in on_update
+    self.set_defaults()
+      self = System Settings (System Settings)
+  File "apps/frappe/frappe/core/doctype/system_settings/system_settings.py", line 220, in set_defaults
+    frappe.db.set_default(df.fieldname, self.get(df.fieldname))
+      self = System Settings (System Settings)
+      set_default_language = <function set_default_language at 0x720db788df30>
+      df = DocField (k18c5rofkn)
+  File "apps/frappe/frappe/database/database.py", line 1157, in set_default
+    frappe.defaults.set_default(key, val, parent, parenttype)
+      key = ********
+      val = 'en'
+      parent = '__default'
+      parenttype = None
+  File "apps/frappe/frappe/defaults.py", line 171, in set_default
+    add_default(key, value, parent)
+      key = ********
+      value = 'en'
+      parent = '__default'
+      parenttype = None
+      table = "tabDefaultValue"
+      current_value = []
+  File "apps/frappe/frappe/defaults.py", line 190, in add_default
+    d.insert(ignore_permissions=True)
+      key = ********
+      value = 'en'
+      parent = '__default'
+      parenttype = None
+      d = DefaultValue (unsaved)
+  File "apps/frappe/frappe/model/document.py", line 705, in insert
+    self.set_user_and_timestamp()
+      self = DefaultValue (unsaved)
+      ignore_permissions = True
+      ignore_links = None
+      ignore_if_duplicate = False
+      ignore_mandatory = None
+      set_name = None
+      set_child_names = True
+  File "apps/frappe/frappe/model/document.py", line 1031, in set_user_and_timestamp
+    self.modified = now()
+      self = DefaultValue (unsaved)
+  File "apps/frappe/frappe/utils/data.py", line 424, in now
+    return now_datetime().strftime(DATETIME_FORMAT)
+  File "apps/frappe/frappe/utils/data.py", line 373, in now_datetime
+    return datetime.datetime.now(ZoneInfo(get_system_timezone())).replace(tzinfo=None)
+  File "/home/codespace/.local/share/uv/python/cpython-3.14.6-linux-x86_64-gnu/lib/python3.14/zoneinfo/_common.py", line 29, in load_tzdata
+    raise ZoneInfoNotFoundError(f"No time zone found with key {key}")
+      key = ********
+      resources = <module 'importlib.resources' from '/home/codespace/.local/share/uv/python/cpython-3.14.6-linux-x86_64-gnu/lib/python3.14/importlib/resources/__init__.py'>
+      components = ['Asia', 'Calcutta']
+      package_name = 'tzdata.zoneinfo.Asia'
+      resource_name = 'Calcutta'
+zoneinfo._common.ZoneInfoNotFoundError: 'No time zone found with key Asia/Calcutta'{"currency": "INR", "country": "India", "timezone": "Asia/Calcutta", "language": "English", "full_name": "Mystic", "email": "mystic@demo.com", "password": "Mys2022", "company_name": "MIPS Tripura", "company_abbr": "mips", "chart_of_accounts": "India - Chart of Accounts", "fy_start_date": "2026-04-01", "fy_end_date": "2027-03-31", "setup_demo": 1}
